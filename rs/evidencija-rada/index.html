@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hr-HR">
+<html lang="sr-Latn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,9 +7,6 @@
     <meta name="description" content="Besplatna evidencija radnih sati po Zakonu o radu: unos radnog vremena po danima, prekovremeni i noćni rad, praznici, Excel i PDF izvoz.">
     <link rel="canonical" href="https://radni-sati.com/rs/evidencija-rada/">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/hr.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; padding: 20px; line-height: 1.6; margin: 0; }
@@ -502,6 +499,7 @@
 <div id="dokumentPrint" style="display:none;"></div>
 
 <script src="/rs/praznici-rs.js"></script>
+<script src="/assets/evidencija-storage.js"></script>
 <script>
 // Globalne varijable — jedan korisnik po uređaju/browseru
 let mojIme = '';
@@ -543,7 +541,7 @@ const VRSTE_BOJA  = { R:'#d5f5e3', P:'#fdebd0', N:'#d6eaf8', O:'#fef9e7', B:'#f9
 
 function ucitajMojePodatke() {
     let podaci = {};
-    try { podaci = JSON.parse(localStorage.getItem('mojiPodaci') || '{}'); } catch(e) {}
+    try { podaci = EvidenceStorage.loadProfile(); } catch(e) {}
     if (podaci.ime) {
         mojIme = podaci.ime;
         mojOib = podaci.oib || '';
@@ -572,7 +570,7 @@ function spremiMojePodatke() {
     mojIme = ime;
     mojOib = document.getElementById('mOib').value.trim();
     mojRadnoMjesto = document.getElementById('mRadnoMjesto').value.trim();
-    localStorage.setItem('mojiPodaci', JSON.stringify({ ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto }));
+    EvidenceStorage.saveProfile({ ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto });
     prikaziIdentitet();
     ucitajEvidenciju();
 }
@@ -586,9 +584,7 @@ function promijeniMojePodatke() {
 }
 
 function evKljuc(god, mj) {
-    // Koristi ime kao ključ — stabilan između sessija, na ovom uređaju
-    const imeKljuc = mojIme.replace(/[^a-zA-Z0-9]/g, '_');
-    return `ev_${imeKljuc}_${god}_${mj}`;
+    return EvidenceStorage.key(mojIme, mojOib, god, mj);
 }
 
 function ucitajEvidenciju() {
@@ -1617,7 +1613,7 @@ function ispisGodisnjeg() {
         </div>`;
     }).join('');
 
-    let danas = new Date().toLocaleDateString('hr-HR');
+    let danas = new Date().toLocaleDateString('sr-Latn-RS');
 
     document.getElementById('evidencijaPrint').innerHTML = `
     <div style="font-family:'Times New Roman',serif;max-width:750px;margin:0 auto;padding:20px;font-size:12px;">

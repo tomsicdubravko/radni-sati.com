@@ -1,0 +1,2 @@
+#ledger{font-size:.85rem}#ledger input[type=text]{min-width:160px}.ba-sources a{overflow-wrap:anywhere}.panel{padding:18px;border:1px solid var(--border-dim);border-radius:12px;background:var(--bg-card)}
+@media print{nav,footer,.ba-sources,button,.hero{display:none!important}.wrap{max-width:none}body{background:white!important;color:black!important}.ba-scroll{overflow:visible}.ba-scroll table{min-width:0;font-size:7pt}th,td{padding:2px!important;color:black!important}input{border:0;color:black;background:white;width:70px} @page{size:A3 landscape;margin:8mm}}

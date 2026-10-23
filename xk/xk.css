@@ -1,0 +1,15 @@
+/* Regional controls, with the calculator's existing visual treatment. */
+[hidden]{display:none!important}
+.template-days{border:1px solid var(--border-dim);border-radius:8px}
+.template-days legend{padding:0 6px}
+.template-days label{align-items:center;cursor:pointer}
+.template-days input{accent-color:var(--neon-cyan)}
+.panel input,.panel select{width:100%}
+.template-days input{width:auto}
+.scroll td{padding:8px}
+.scroll input[type=time]{min-width:115px}
+.scroll input[type=number]{width:80px}
+.scroll input[type=date]{min-width:145px}
+.holiday{background:rgba(245,158,11,.06)}
+.scroll{margin:24px 0}
+.ba-scroll select{min-width:150px}

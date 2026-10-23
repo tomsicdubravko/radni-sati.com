@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="sr-Latn-ME">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalendar praznika i neradnih dana u Crnoj Gori | Radni sati</title>
+<meta name="description" content="Kalendar praznika i neradnih dana u Crnoj Gori po godinama, sa produženim vikendima, mostovima i fondom sati po mjesecima.">
+<link rel="canonical" href="https://radni-sati.com/me/kalendar/">
+<meta property="og:title" content="Kalendar praznika i neradnih dana u Crnoj Gori">
+<meta property="og:description" content="Kalendar praznika i neradnih dana u Crnoj Gori po godinama, sa produženim vikendima, mostovima i fondom sati po mjesecima.">
+<meta property="og:url" content="https://radni-sati.com/me/kalendar/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sr_ME">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #070611;
+    --bg-card: rgba(16, 14, 34, 0.85);
+    --neon-pink: #ff007f;
+    --neon-cyan: #00f2fe;
+    --neon-gold: #f59e0b;
+    --neon-green: #10b981;
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-dim: rgba(255, 255, 255, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 242, 254, 0.12), transparent 70%),
+      radial-gradient(circle 600px at 90% 20%, rgba(245, 158, 11, 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, .brand-font { font-family: 'Orbitron', sans-serif; letter-spacing: 0.02em; }
+  a { text-decoration: none; color: inherit; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7, 6, 17, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-dim);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
+  .wordmark { font-size: 1.05rem; font-weight: 900; color: #fff; }
+  .wordmark span { color: var(--neon-pink); }
+  .back-link { font-size: 0.85rem; color: var(--neon-cyan); }
+
+  header.hero { padding: 56px 0 32px; }
+  .eyebrow {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem; color: var(--neon-cyan);
+    letter-spacing: 0.15em; display: block; margin-bottom: 14px;
+  }
+  h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
+  .lead { font-size: 1.02rem; color: var(--text-muted); max-width: 62ch; }
+
+  .year-switcher {
+    margin-top: 22px; font-size: 0.85rem; color: var(--text-muted);
+  }
+  .year-switcher a { margin-right: 6px; color: var(--text-muted); }
+  .year-switcher a:hover { color: var(--neon-cyan); }
+
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin: 32px 0;
+  }
+  .stat-card {
+    position: relative; overflow: hidden;
+    background: var(--bg-card); border: 1px solid var(--border-dim);
+    border-radius: 10px; padding: 18px; text-align: center;
+  }
+  .stat-card::after {
+    content: ''; position: absolute; width: 90px; height: 90px;
+    right: -40px; bottom: -45px; border-radius: 50%;
+    background: rgba(0,242,254,0.07);
+  }
+  .stat-card:nth-child(2)::after { background: rgba(245,158,11,0.08); }
+  .stat-card:nth-child(3)::after { background: rgba(255,0,127,0.07); }
+  .stat-card .num { position: relative; z-index: 1; font-size: 1.7rem; font-weight: 800; color: var(--neon-gold); }
+  .stat-card .label { position: relative; z-index: 1; font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+  .stat-card:nth-child(4)::after { background: rgba(16,185,129,0.07); }
+  .stat-card.stat-main { border-color: rgba(245,158,11,0.55); background: rgba(245,158,11,0.09); box-shadow: 0 0 18px rgba(245,158,11,0.12); }
+  .stat-card.stat-main .num { font-size: 2.15rem; }
+  .stat-card.stat-main .label { color: #f5d38a; font-weight: 600; }
+  @media (max-width: 860px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0 40px;
+    background: var(--bg-card); border: 1px solid var(--border-dim); border-radius: 10px; overflow: hidden;
+  }
+  th, td { padding: 12px 14px; text-align: left; font-size: 0.9rem; }
+  th {
+    background: rgba(0,242,254,0.08); color: var(--neon-cyan);
+    font-weight: 700; font-size: 0.7rem; letter-spacing: 0.07em; text-transform: uppercase;
+    border-bottom: 1px solid var(--border-dim);
+  }
+  td { border-bottom: 1px solid var(--border-dim); color: var(--text-light); }
+  tr:last-child td { border-bottom: none; }
+  tr.total-row td { font-weight: 700; color: var(--neon-gold); background: rgba(245,158,11,0.06); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .note {
+    font-size: 0.85rem; color: var(--text-muted); margin-bottom: 40px; line-height: 1.6;
+  }
+
+  .faq { margin: 0 0 40px; }
+  .faq h2 { font-size: 1.25rem; color: #fff; margin-bottom: 18px; }
+  .faq h3 { font-size: 1rem; color: var(--neon-cyan); margin: 22px 0 6px; }
+  .faq h3:first-of-type { margin-top: 0; }
+  .faq p { font-size: 0.92rem; color: #c8cfdb; line-height: 1.65; max-width: 820px; }
+  .faq a { color: var(--neon-gold); }
+
+  .cta-card {
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16,185,129,0.35);
+    border-radius: 14px; padding: 26px; margin: 40px 0 56px;
+    display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+  }
+  .cta-icon { font-size: 2rem; }
+  .cta-text h3 { font-size: 1.15rem; margin-bottom: 6px; color: #fff; }
+  .cta-text p { font-size: 0.88rem; color: var(--text-muted); max-width: 46ch; }
+  .cta-btn {
+    margin-left: auto; padding: 10px 20px; border-radius: 6px;
+    background: rgba(16,185,129,0.15); border: 1px solid var(--neon-green);
+    color: #fff; font-weight: 700; font-size: 0.85rem; white-space: nowrap;
+  }
+  .cta-btn:hover { background: var(--neon-green); }
+
+  footer {
+    border-top: 1px solid var(--border-dim);
+    padding: 30px 0; text-align: center;
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+
+  @media (max-width: 600px) {
+    .stat-row { grid-template-columns: 1fr; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 9px 8px; }
+    .cta-btn { margin-left: 0; width: 100%; text-align: center; }
+  }
+  @media (max-width: 430px) {
+    .back-link {
+      font-size: 0; width: 34px; height: 34px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-dim); border-radius: 8px;
+    }
+    .back-link::after { content: '←'; font-size: 1rem; color: var(--neon-cyan); }
+  }
+</style>
+<style>
+  .panel{background:var(--bg-card);border:1px solid var(--border-dim);border-radius:10px;padding:20px;margin:20px 0}
+  .badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.72rem;font-weight:700;white-space:nowrap}
+  .b-rad{background:rgba(245,158,11,.18);color:var(--neon-gold)}
+  .b-vik{background:rgba(148,163,184,.15);color:var(--text-muted)}
+  .months{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin:20px 0 40px}
+  .mon{background:var(--bg-card);border:1px solid var(--border-dim);border-radius:10px;padding:14px}
+  .mon h3{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--neon-cyan);text-transform:capitalize;margin-bottom:8px;display:flex;justify-content:space-between}
+  .mon h3 small{font-family:'IBM Plex Sans',sans-serif;color:var(--text-muted);font-weight:500}
+  .mg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:.8rem}
+  .mg .h{color:var(--text-muted);font-size:.68rem}
+  .mg .c{padding:4px 0;border-radius:4px}
+  .mg .we{color:var(--text-muted);background:rgba(255,255,255,.03)}
+  .mg .hol{background:var(--neon-pink);color:#fff;font-weight:700;cursor:help}
+  .mg .tod{outline:2px solid var(--neon-cyan);outline-offset:-2px}
+  .ysel{display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .ysel button{background:var(--bg-card);border:1px solid var(--border-dim);color:var(--text-light);border-radius:6px;padding:6px 14px;font:700 1rem 'IBM Plex Sans',sans-serif;cursor:pointer}
+  .ysel button:hover{border-color:var(--neon-cyan)}
+  .ysel b{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--neon-gold);min-width:4ch;text-align:center}
+  label.f{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--text-muted)}
+  input,select{font:inherit;color:var(--text-light);background:rgba(255,255,255,.04);border:1px solid var(--border-dim);border-radius:6px;padding:8px 10px;min-width:0;color-scheme:dark}
+  input:focus{outline:none;border-color:var(--neon-cyan)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+  .btn{background:rgba(16,185,129,.15);border:1px solid var(--neon-green);color:#fff;font-weight:700;font-size:.85rem;padding:9px 16px;border-radius:6px;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--neon-green)}
+  .btn.ghost{background:transparent;border-color:var(--border-dim)}
+  .btn.ghost:hover{border-color:var(--neon-pink);background:transparent}
+  .scroll{overflow-x:auto}
+  .scroll table{margin:0;min-width:720px}
+  .scroll td{padding:8px 8px}
+  .scroll input{padding:6px 8px;width:100%}
+  .warn{color:var(--neon-pink);font-size:.82rem;margin-top:8px}
+</style>
+<style>
+/* Kalendar v1.1 */
+.wrap{max-width:1080px}
+header.hero{padding:48px 0 22px}
+header.hero h1{max-width:900px}
+.ysel{display:inline-flex;padding:7px;border:1px solid rgba(0,242,254,.25);border-radius:12px;background:rgba(0,242,254,.04);gap:14px}
+.ysel button{width:42px;height:42px;padding:0;font-size:1.6rem}
+.ysel b{min-width:100px}
+.stat-row{margin:20px 0 30px;gap:12px}
+.stat-card{min-height:112px;display:flex;flex-direction:column;justify-content:center}
+.stat-card .num{font-size:1.8rem}
+.stat-card:last-child .num{font-size:1rem!important;line-height:1.4}
+.calendar-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px}
+.calendar-toolbar strong{display:block;font-size:1.13rem}
+.calendar-toolbar span{color:var(--text-muted);font-size:.85rem}
+.jump-link{border:1px solid rgba(0,242,254,.4);border-radius:8px;color:var(--neon-cyan);padding:9px 14px;white-space:nowrap;font-size:.84rem}
+.calendar-legend{display:flex;gap:22px;flex-wrap:wrap;color:var(--text-muted);font-size:.82rem;margin:8px 0 14px}
+.calendar-legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:13px;height:13px;display:inline-block;border-radius:4px}
+.dot.holiday{background:var(--neon-pink)}.dot.weekend{background:#4c5365}.dot.today{border:2px solid var(--neon-cyan)}
+.table-wrap{overflow-x:auto;margin-bottom:36px;border-radius:12px;border:1px solid var(--border-dim)}
+.table-wrap table{margin:0;border:0;min-width:570px}
+.months{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.mon{padding:19px;border-radius:13px}
+.mon h3{font-size:.93rem;margin-bottom:15px}
+.mg{gap:4px;font-size:.87rem}
+.mg .c{padding:7px 0}
+.mg .hol{background:var(--neon-pink)}
+.mg .hol:hover{filter:brightness(1.3)}
+@media(max-width:800px){.months{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.stat-row{grid-template-columns:repeat(2,1fr)}.stat-card{min-height:105px;padding:12px}.stat-card .num{font-size:1.5rem}.months{grid-template-columns:1fr}.calendar-toolbar{align-items:flex-start;flex-direction:column}.mg{font-size:.95rem}.mg .c{padding:9px 0}}
+</style>
+<style>
+/* v1.3: klik na praznik otvara popis i označava odgovarajući redak */
+.holiday-row.is-selected td{background:rgba(0,242,254,.20)!important;color:#fff!important;box-shadow:inset 0 2px 0 rgba(0,242,254,.65),inset 0 -2px 0 rgba(0,242,254,.65)}
+.holiday-row.is-selected td:first-child{border-left:4px solid var(--neon-cyan)}
+.mg .c.hol.is-selected{outline:3px solid var(--neon-cyan);outline-offset:2px}
+.holiday-row{scroll-margin-top:110px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+/* v1.2: godišnji kalendar po mjesecima */
+header.hero{padding:40px 0 20px}.hero h1{font-size:clamp(1.8rem,4vw,2.8rem)}.hero .lead{max-width:850px}
+.ysel{margin-top:16px}.overview{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:4px 0 17px;color:var(--neon-cyan)}.overview strong{font-size:1.08rem}.overview span{color:var(--text-muted);font-size:.83rem}
+.months{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:14px 0 22px}.mon{padding:17px;border:1px solid var(--border-dim);border-radius:10px;min-width:0}.month-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}.month-heading h3{margin:0;font-size:1rem;color:#fff}.month-heading strong{font-size:.78rem;color:var(--neon-cyan);white-space:nowrap}.mg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.mg .h{text-align:center;font-size:.73rem;color:var(--text-muted)}.mg .c{font:inherit;color:inherit;border:0;background:transparent;min-width:0;width:100%;aspect-ratio:1;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.81rem}.mg .c.we{background:rgba(150,160,180,.15);color:#aab4c4}.mg .c.hol{background:#bd302d;color:#fff;font-weight:800}.mg .c.tod{outline:2px solid var(--neon-cyan);outline-offset:-2px}.mg .c:hover{outline:2px solid var(--neon-cyan)}.month-stats{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--border-dim);margin-top:13px;padding-top:10px;font-size:.71rem;color:var(--text-muted)}.month-stats span{display:flex;flex-direction:column;gap:3px}.month-stats b{color:#fff;font-size:.87rem}.month-stats span:last-child{text-align:right}.holiday-info{border:1px solid rgba(0,242,254,.3);border-radius:9px;background:rgba(0,242,254,.04);padding:14px;margin:14px 0 24px;font-size:.9rem}.holiday-details{margin:24px 0 35px}.holiday-details summary{cursor:pointer;font-weight:700;padding:15px;border:1px solid var(--border-dim);border-radius:9px}.holiday-details .table-wrap{margin-top:14px}
+@media(max-width:850px){.months{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.months{grid-template-columns:1fr}.mon{padding:18px}.mg .c{font-size:.95rem}.month-stats{font-size:.8rem}}
+</style><style>nav .wrap{gap:12px}.nav-r{display:flex;align-items:center;gap:18px}.nav-r .about-link{color:var(--neon-cyan);font-size:.8rem;font-weight:600}@media(max-width:420px){.nav-r{gap:12px}.nav-r .about-link{font-size:.75rem}}.nav-r a.back-link[href*="evidencija"]::after{content:"→"}</style><style>.mostovi{margin:10px 0 40px}.mostovi h2{font-size:1.3rem;color:#fff;margin-bottom:8px}.mostovi-lead{color:var(--text-muted);font-size:.92rem;margin-bottom:14px}.mostovi td{vertical-align:top;font-size:.88rem;line-height:1.45}.mostovi td small{color:var(--text-muted)}.mostovi td b{color:var(--neon-cyan)}.mostovi-vikend{font-size:.85rem;color:var(--text-muted);margin-top:-20px}.mostovi-vikend b{color:var(--text-light)}.god-linkovi{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:.85rem}.god-linkovi a{padding:4px 12px;border:1px solid var(--border-dim);border-radius:999px;color:var(--text-light);text-decoration:none}.god-linkovi a:hover{border-color:var(--neon-cyan)}nav.god-linkovi{position:static;background:none;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;z-index:auto}.god-linkovi a.on{border-color:var(--neon-gold);color:var(--neon-gold);font-weight:700}.mostovi td b.bn{color:#fff}@media(max-width:700px){.mostovi .table-wrap{overflow:visible;border:0}.mostovi table,.mostovi tbody{display:block;width:100%;min-width:0!important}.mostovi thead{display:none}.mostovi tr{display:block;border:1px solid var(--border-dim);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:var(--bg-card)}.mostovi td{display:grid;grid-template-columns:36% minmax(0,1fr);gap:10px;border:0!important;padding:5px 0!important;text-align:right}.mostovi td .v{min-width:0;overflow-wrap:anywhere}.mostovi td::before{content:attr(data-l);color:var(--text-muted);font-size:.75rem;text-align:left}.mostovi td:first-child{display:block;text-align:left}.mostovi td:first-child::before{display:none}.mostovi-vikend{margin-top:0}}</style><meta name="google-adsense-account" content="ca-pub-6830707036064247">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6830707036064247" crossorigin="anonymous"></script>
+<style>.pl-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(245,158,11,.14),rgba(0,242,254,.06));border:1px solid rgba(245,158,11,.45);border-radius:14px;padding:20px 22px;margin:0 0 40px;text-decoration:none;color:var(--text-light)}.pl-cta:hover{border-color:var(--neon-gold)}.pl-cta b{display:block;font-size:1.1rem;color:#fff;margin-bottom:4px}.pl-cta span.t{color:var(--text-muted);font-size:.9rem}.pl-cta .go{color:var(--neon-gold);font-weight:700;white-space:nowrap}</style><link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:image" content="https://radni-sati.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Radni-sati.hr – besplatni alati za radno vrijeme">
+<meta property="og:site_name" content="Radni-sati.com">
+<meta name="twitter:card" content="summary_large_image">
+<style>nav.rs-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}.rs-menu{display:flex;gap:18px;align-items:center}.rs-menu a{color:var(--text-light,#e2e8f0);font-size:.84rem;font-weight:600;text-decoration:none;white-space:nowrap;opacity:.8}.rs-menu a:hover,.rs-menu a[aria-current]{color:var(--neon-cyan,#00f2fe);opacity:1}.rs-burger{display:none;background:rgba(255,255,255,.04);border:1px solid var(--border-dim,rgba(255,255,255,.15));color:#fff;border-radius:8px;width:42px;height:38px;font-size:1.25rem;line-height:1;cursor:pointer}@media(max-width:960px){nav.rs-nav .wrap{flex-wrap:wrap}.rs-burger{display:inline-flex;align-items:center;justify-content:center}.rs-menu{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;padding:6px 0 2px}.rs-menu.open{display:flex}.rs-menu a{padding:11px 4px;border-top:1px solid rgba(255,255,255,.08);font-size:.95rem;opacity:.9}}</style><style>nav.rs-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}.rs-menu{display:flex;gap:16px;align-items:center}.rs-menu a{color:var(--text-light,#e2e8f0);font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;opacity:.8}.rs-menu a:hover,.rs-menu a[aria-current]{color:var(--neon-cyan,#00f2fe);opacity:1}.rs-burger{display:none;background:rgba(255,255,255,.04);border:1px solid var(--border-dim,rgba(255,255,255,.15));color:#fff;border-radius:8px;width:42px;height:38px;font-size:1.25rem;line-height:1;cursor:pointer}@media(max-width:1100px){nav.rs-nav .wrap{flex-wrap:wrap}.rs-burger{display:inline-flex;align-items:center;justify-content:center}.rs-menu{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;padding:6px 0 2px}.rs-menu.open{display:flex}.rs-menu a{padding:11px 4px;border-top:1px solid rgba(255,255,255,.08);font-size:.95rem;opacity:.9}}</style></head>
+<body>
+<nav class="rs-nav"><div class="wrap"><a href="/" class="wordmark" title="Izbor zemlje">RADNI-<span>SATI</span>.COM <small style="font-size:.6em;color:var(--text-muted,#94a3b8)">🇲🇪 Crna Gora</small></a><button type="button" class="rs-burger" aria-expanded="false" aria-controls="rs-menu" aria-label="Otvori meni">☰</button><div class="rs-menu" id="rs-menu"><a href="/me/" data-sek="/me/">Crna Gora</a><a href="/me/fond-sati-2026/" data-sek="/me/fond-sati" id="me-fond">Fond sati</a><a href="/me/kalendar/" data-sek="/me/kalendar">Kalendar</a><a href="/me/neradni-dani-2026/" data-sek="/me/neradni-dani">Neradni dani</a><a href="/me/planer-godisnjeg/" data-sek="/me/planer-godisnjeg">Planer odmora</a><a href="/me/evidencija-rada/" data-sek="/me/evidencija-rada">Evidencija rada</a><a href="/me/kalkulator-sati/" data-sek="/me/kalkulator-sati">Kalkulator</a><a href="/o-nama/" data-sek="/o-nama">O nama</a><a href="/kontakt/" data-sek="/kontakt">Kontakt</a><a href="/" data-sek="/#zemlje">🌍 Zemlje</a></div></div></nav>
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">KALENDAR · PRAZNICI · CRNA GORA</span>
+    <h1 id="naslov">Praznici i neradni dani u Crnoj Gori</h1>
+    <p class="lead">Pregled svih 12 mjeseci sa praznicima koji su neradni dani za sve zaposlene u Crnoj Gori i fondom sati po mjesecima. Kliknite na označeni datum za naziv praznika.</p>
+    <div class="ysel"><button id="prev" aria-label="Prethodna godina">‹</button><b id="god"></b><button id="next" aria-label="Sljedeća godina">›</button></div>
+    <nav class="god-linkovi" aria-label="Neradni dani po godinama"><a href="/me/neradni-dani-2026/">Neradni dani 2026.</a><a href="/me/neradni-dani-2027/">Neradni dani 2027.</a></nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="overview"><strong>Godišnji fond: <span id="yearFund">—</span> sati</strong><span>40 sati sedmično · uključuje praznike na radni dan</span></div>
+  <div class="calendar-legend"><span><i class="dot holiday"></i>Praznik</span><span><i class="dot weekend"></i>Vikend</span><span><i class="dot today"></i>Danas</span></div>
+  <div class="months" id="mjeseci"></div>
+  <div id="holidayInfo" class="holiday-info" aria-live="polite">Kliknite na označeni praznik za njegov naziv.</div>
+  <details class="holiday-details"><summary>Popis svih praznika i neradnih dana <span id="holidayCount"></span></summary>
+    <div class="table-wrap"><table><thead><tr><th>Datum</th><th>Dan</th><th>Praznik</th><th>Pada na</th></tr></thead><tbody id="lista"></tbody></table></div>
+  </details>
+  <section class="mostovi" id="mostovi"></section>
+  <a class="pl-cta" id="pl-cta" href="/me/planer-godisnjeg/"><span><b>🏖️ Planer godišnjeg odmora</b><span class="t">Kliknite dane u kalendaru, a planer sabere godišnji, vikende i praznike i predloži najbolji raspored.</span></span><span class="go">Otvori planer →</span></a>
+  <section class="faq">
+    <h2>Česta pitanja o praznicima u Crnoj Gori</h2>
+    <h3>Koji praznici su neradni dani u Crnoj Gori?</h3>
+    <p>Neradni dani za sve zaposlene su Nova godina (1. i 2. januar), Praznik rada (1. i 2. maj), Dan nezavisnosti (21. i 22. maj), Dan državnosti (13. i 14. jul) i Njegošev dan, crnogorski praznik kulture (13. i 14. novembar). Svi se praznuju dva dana. Dan Ekološke države (20. septembar) praznuje se radno.</p>
+    <h3>Šta ako praznik padne u nedjelju?</h3>
+    <p>Ako je praznik nedjelja, neradna su dva naredna dana. Ako je drugi praznični dan nedjelja, neradan je prvi naredni dan. Kalendar te dane prikazuje kao posebne neradne dane. Praznik koji padne u subotu ne prenosi se.</p>
+    <h3>A vjerski praznici?</h3>
+    <p>Pravoslavni Božić i Vaskrs, katolički Božić i Uskrs, bajrami i jevrejski praznici nisu neradni za sve, već vjernici imaju pravo na plaćeno odsustvo. Zato nisu označeni u kalendaru. Tačni datumi su na stranicama <a href="/me/neradni-dani-2026/">neradni dani 2026.</a> i <a href="/me/neradni-dani-2027/">2027.</a></p>
+    <h3>Radi li se na praznik?</h3>
+    <p>Praznični dani su neradni i zaposleni za njih prima naknadu zarade. Ako radi na dan državnog ili vjerskog praznika, Opšti kolektivni ugovor propisuje uvećanje zarade od najmanje 150%.</p>
+    <h3>Kako iskoristiti praznike za produženi vikend?</h3>
+    <p>Pošto se praznici u Crnoj Gori praznuju dva dana, praznik koji počinje u četvrtak ili ponedjeljak sam daje četiri slobodna dana. Tabela „Produženi vikendi i mostovi“ za svaku godinu pokazuje koliko dana odmora treba i koliko slobodnih dana se dobija.</p>
+    <h3>Kako praznici utiču na fond sati?</h3>
+    <p>Praznični dani koji padnu na radni dan ulaze u fond sati, ali se u obračunu zarade iskazuju posebno. Broj sati po mjesecima nalazi se na stranicama <a href="/me/fond-sati-2026/">fond sati</a>.</p>
+  </section>
+</main>
+<p class="rs-prijava" style="text-align:center;margin:28px auto 6px;padding:0 16px;font-size:.85rem;opacity:.85">Primijetili ste grešku ili imate ideju? <a href="/kontakt/?tema=greska&amp;s=/me/kalendar/" style="color:#00f2fe;font-weight:600">Prijavi grešku ili predloži poboljšanje →</a></p>
+<footer><div class="wrap">Radni sati Crna Gora · fond sati, praznici i evidencija rada — <a href="/me/" style="color:var(--neon-cyan)">radni-sati.com</a></div><div style="text-align:center;margin-top:12px"><a href="/o-nama/" style="color:var(--neon-cyan)">O nama</a> · <a href="/" style="color:var(--neon-cyan)">Druge zemlje</a> · 🇭🇷 <a href="https://radni-sati.hr/" style="color:var(--neon-cyan)">radni-sati.hr</a> · Izradio <a href="https://retroapplab.com/" target="_blank" rel="noopener noreferrer" style="color:var(--neon-cyan)">RetroAppLab</a></div><div style="text-align:center;margin-top:8px;font-size:.8rem"><a href="/kontakt/" style="color:var(--neon-cyan)">Kontakt</a> · <a href="/politika-privatnosti/" style="color:var(--neon-cyan)">Politika privatnosti</a></div></footer>
+<script src="/me/praznici-me.js"></script>
+<script>
+
+function p2(n){return String(n).padStart(2,"0")}
+function kljuc(d){return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())}
+function praznici(y){return prazniciZemlje(y)}
+var MJ=["januar","februar","mart","april","maj","jun","jul","avgust","septembar","oktobar","novembar","decembar"];
+var MJG=["januara","februara","marta","aprila","maja","juna","jula","avgusta","septembra","oktobra","novembra","decembra"];
+var DAN=["nedjelja","ponedjeljak","utorak","srijeda","četvrtak","petak","subota"];
+
+var KR=["ned","pon","uto","sri","čet","pet","sub"];
+function rsAdd(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function rsFree(d){var w=d.getDay();return w===0||w===6||!!praznici(d.getFullYear())[kljuc(d)]}
+function rsDan(d,y){return d.getDate()+". "+MJG[d.getMonth()]+(d.getFullYear()!==y?" "+d.getFullYear()+".":"")}
+function rsRaspon(a,b,y){
+ if(kljuc(a)===kljuc(b))return rsDan(a,y);
+ if(a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear())return a.getDate()+".–"+rsDan(b,y);
+ return rsDan(a,y)+" – "+rsDan(b,y);
+}
+function rsDani(n){return n+(n%10===1&&n%100!==11?" dan":" dana")}
+function rsSlob(n){return n+(n%10===1&&n%100!==11?" slobodan dan":(n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?" slobodna dana":" slobodnih dana"))}
+function mostoviPodaci(y){
+ var H=praznici(y),K=Object.keys(H).sort(),seen={},rows=[],vikend=[];
+ K.forEach(function(k){
+  var p=k.split("-").map(Number),d=new Date(p[0],p[1]-1,p[2]),w=d.getDay();
+  if(w===0||w===6){
+   var a0=d,b0=d;while(rsFree(rsAdd(a0,-1)))a0=rsAdd(a0,-1);while(rsFree(rsAdd(b0,1)))b0=rsAdd(b0,1);
+   var hasWork=false;for(var x0=a0;x0<=b0;x0=rsAdd(x0,1)){var w0=x0.getDay();if(w0!==0&&w0!==6&&praznici(x0.getFullYear())[kljuc(x0)])hasWork=true}
+   if(!hasWork)vikend.push(H[k]+" ("+KR[w]+" "+rsDan(d,y)+")");
+   return;
+  }
+  var a=d,b=d;while(rsFree(rsAdd(a,-1)))a=rsAdd(a,-1);while(rsFree(rsAdd(b,1)))b=rsAdd(b,1);
+  var bk=kljuc(a);if(seen[bk])return;seen[bk]=1;
+  var names=[],dates=[];for(var x=a;x<=b;x=rsAdd(x,1)){var hh=praznici(x.getFullYear())[kljuc(x)];if(hh){names.push(hh);dates.push(x)}}
+  var len=Math.round((b-a)/864e5)+1,opts=[];
+  [-1,1].forEach(function(dir){
+   var g=0,take=[],z=rsAdd(dir<0?a:b,dir);
+   while(!rsFree(z)&&g<5){g++;take.push(z);z=rsAdd(z,dir)}
+   if(g===0||g>4)return;
+   var e=z;while(rsFree(rsAdd(e,dir)))e=rsAdd(e,dir);
+   var from=dir<0?e:a,to=dir<0?b:e;take.sort(function(p,q){return p-q});
+   opts.push({g:g,take:take,from:from,to:to,total:Math.round((to-from)/864e5)+1});
+  });
+  opts.sort(function(p,q){return p.g-q.g||q.total-p.total});
+  rows.push({names:names,dates:dates,a:a,b:b,len:len,best:opts[0]||null});
+ });
+ return {rows:rows,vikend:vikend};
+}
+function mostoviHTML(y){
+ var P=mostoviPodaci(y),tb="";
+ P.rows.forEach(function(r){
+  var dat=r.dates.filter(function(d){return d.getFullYear()===y}).map(function(d){return KR[d.getDay()]+" "+rsDan(d,y)}).join(", ");
+  var nat=r.len>=3?"<span class=\"badge b-rad\">"+rsSlob(r.len)+"</span><br><small>"+rsRaspon(r.a,r.b,y)+"</small>":"<span class=\"badge b-vik\">ne</span>";
+  var most="—";
+  if(r.best){var t=r.best.take,tk=t.length===1?KR[t[0].getDay()]+" "+rsDan(t[0],y):KR[t[0].getDay()]+" "+rsDan(t[0],y)+" – "+KR[t[t.length-1].getDay()]+" "+rsDan(t[t.length-1],y);
+   most="Uzmi <b>"+rsDani(r.best.g)+"</b> godišnjeg ("+tk+")<br>→ <b>"+rsSlob(r.best.total)+"</b> <small>("+rsRaspon(r.best.from,r.best.to,y)+")</small>"}
+  tb+="<tr><td data-l=\"Praznik\"><b class=\"bn\">"+r.names.join(" · ")+"</b></td><td data-l=\"Datum\"><span class=\"v\">"+dat+"</span></td><td data-l=\"Bez godišnjeg\"><span class=\"v\">"+nat+"</span></td><td data-l=\"Najbolji most\"><span class=\"v\">"+most+"</span></td></tr>";
+ });
+ var h="<h2>Produženi vikendi i mostovi "+y+".</h2><p class=\"mostovi-lead\">Kada praznik pada uz vikend, dobija se produženi vikend bez dana godišnjeg. Kada pada usred sedmice, jedan ili dva dana godišnjeg spoje ga s vikendom. Za svaki praznik na radni dan prikazan je najisplativiji „most“.</p>";
+ h+="<div class=\"table-wrap\"><table><thead><tr><th>Praznik</th><th>Datum</th><th>Produženo bez godišnjeg</th><th>Najbolji most</th></tr></thead><tbody>"+tb+"</tbody></table></div>";
+ if(P.vikend.length)h+="<p class=\"mostovi-vikend\"><b>Padaju na vikend i ne prenose se na radni dan:</b> "+P.vikend.join(", ")+".</p>";
+ return h;
+}
+
+var RS_GOD=[];
+(function(){
+var now=new Date(),q=new URLSearchParams(location.search),initialDate=q.get("datum"),y=Number(q.get("g"))||(initialDate?Number(initialDate.slice(0,4)):now.getFullYear());
+function r(){
+ var H=praznici(y),K=Object.keys(H).sort(),html="",annual=0,t=kljuc(now);
+ document.getElementById("god").textContent=y+".";
+ if(!window.RS_FIXED){document.getElementById("naslov").textContent="Praznici i neradni dani "+y+".";document.title="Praznici i neradni dani "+y+". u Crnoj Gori | Radni sati";}
+ K.forEach(function(k){var p=k.split("-").map(Number),d=new Date(p[0],p[1]-1,p[2]),w=d.getDay(),we=w===0||w===6;
+ html+="<tr id=\"praznik-"+k+"\" class=\"holiday-row\"><td>"+p[2]+". "+MJG[p[1]-1]+"</td><td>"+DAN[w]+"</td><td>"+H[k]+"</td><td><span class=\"badge "+(we?"b-vik\">vikend":"b-rad\">radni dan")+"</span></td></tr>";
+ });
+ document.getElementById("lista").innerHTML=html;
+ document.getElementById("holidayCount").textContent="("+K.length+")";
+ document.getElementById("mostovi").innerHTML=mostoviHTML(y);
+ var plc=document.getElementById("pl-cta");if(plc&&!window.RS_FIXED)plc.href="/me/planer-godisnjeg/?g="+y;
+ var m="";
+ for(var i=0;i<12;i++){
+  var f=(new Date(y,i,1).getDay()+6)%7,n=new Date(y,i+1,0).getDate(),work=0,holWork=0;
+  var g=["Po","Ut","Sr","Če","Pe","Su","Ne"].map(function(x){return "<div class=\"h\">"+x+"</div>"}).join("")+"<div></div>".repeat(f);
+  for(var d=1;d<=n;d++){
+   var dt=new Date(y,i,d),w=dt.getDay(),key=kljuc(dt),h=H[key],weekend=w===0||w===6;
+   if(!weekend){work++;if(h)holWork++}
+   var cl="c"+(h?" hol":weekend?" we":"")+(key===t?" tod":"");
+   g+="<button type=\"button\" class=\""+cl+"\" data-date=\""+key+"\" "+(h?"aria-label=\""+d+". "+MJG[i]+": "+h+"\"":"aria-label=\""+d+". "+MJG[i]+"\"")+">"+d+"</button>";
+  }
+  annual+=work*8;
+  m+="<article class=\"mon\"><div class=\"month-heading\"><h3>"+MJ[i].charAt(0).toUpperCase()+MJ[i].slice(1)+"</h3><strong>"+(work*8)+" sati</strong></div><div class=\"mg\">"+g+"</div><div class=\"month-stats\"><span>Radni dani <b>"+work+"</b></span><span>Praznici radnim danom <b>"+holWork+"</b></span></div></article>";
+ }
+ document.getElementById("mjeseci").innerHTML=m;
+ document.getElementById("yearFund").textContent=annual;
+ document.getElementById("holidayInfo").textContent="Kliknite na crveno označeni datum za naziv praznika.";
+ if(location.protocol!=="file:"&&!window.RS_FIXED)history.replaceState(null,"",location.pathname+"?g="+y+(initialDate?"&datum="+encodeURIComponent(initialDate):""));
+}
+document.getElementById("mjeseci").addEventListener("click",function(e){
+ var btn=e.target.closest("button[data-date]");if(!btn)return;
+ var key=btn.getAttribute("data-date"),h=praznici(y)[key],d=key.split("-");
+ document.getElementById("holidayInfo").textContent=h?d[2]+". "+MJG[Number(d[1])-1]+" "+y+". — "+h:"Za "+d[2]+". "+MJG[Number(d[1])-1]+" nema državnog praznika.";
+ document.querySelectorAll(".holiday-row.is-selected").forEach(function(el){el.classList.remove("is-selected")});
+ document.querySelectorAll(".mg .c.is-selected").forEach(function(el){el.classList.remove("is-selected")});
+ if(!h)return;
+ btn.classList.add("is-selected");
+ var details=document.querySelector(".holiday-details");details.open=true;
+ var target=document.getElementById("praznik-"+key);
+ if(target){target.classList.add("is-selected");requestAnimationFrame(function(){target.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"center"});});}
+});
+
+function selectHoliday(key,scroll){
+ var H=praznici(y),h=H[key];if(!h)return;
+ var btn=document.querySelector('.mg button[data-date="'+key+'"]');
+ var target=document.getElementById("praznik-"+key);
+ if(!btn||!target)return;
+ document.querySelectorAll(".holiday-row.is-selected,.mg .c.is-selected").forEach(function(el){el.classList.remove("is-selected")});
+ btn.classList.add("is-selected");target.classList.add("is-selected");
+ document.querySelector(".holiday-details").open=true;
+ var d=key.split("-");document.getElementById("holidayInfo").textContent=d[2]+". "+MJG[Number(d[1])-1]+" "+y+". — "+h;
+ if(scroll)requestAnimationFrame(function(){setTimeout(function(){target.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"center"})},80)});
+}
+function rsIdi(n){if(RS_GOD.indexOf(n)>=0){location.href="/me/kalendar/"+n+"/";}else{initialDate=null;y=n;r();}}
+document.getElementById("prev").onclick=function(){rsIdi(y-1)};
+document.getElementById("next").onclick=function(){rsIdi(y+1)};
+r();
+if(initialDate&&/^\d{4}-\d{2}-\d{2}$/.test(initialDate))selectHoliday(initialDate,true);
+})();
+</script>
+<script>(function(){var b=document.querySelector(".rs-burger"),m=document.getElementById("rs-menu");if(!b||!m)return;b.onclick=function(){var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o);b.textContent=o?"✕":"☰";b.setAttribute("aria-label",o?"Zatvori meni":"Otvori meni")};var y=new Date().getFullYear(),f=document.getElementById("me-fond");if(f&&y>=2026&&y<=2027)f.href="/me/fond-sati-"+y+"/";var p=location.pathname;m.querySelectorAll("a[data-sek]").forEach(function(a){var s=a.dataset.sek;if(s==="/me/"?(p==="/me/"||p==="/me/index.html"):p.indexOf(s)===0)a.setAttribute("aria-current","page")});})();</script>
+</body>
+</html>
