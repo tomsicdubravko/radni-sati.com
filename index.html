@@ -204,7 +204,7 @@ header.hero .lead{max-width:850px}
 .legenda i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
 .zemlje{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:26px 0 40px}
 .zemlja{display:block;background:var(--bg-card);border:1px solid var(--border-dim);border-radius:14px;padding:20px}
-.zemlja .zz{font-size:2rem}.zemlja h2{font-size:1.1rem;margin:8px 0 4px;color:#fff}.zemlja p{font-size:.85rem;color:var(--text-muted)}
+.country-flag{display:inline-block;width:32px;height:24px;object-fit:contain;flex-shrink:0;vertical-align:middle}.zemlja h2{display:flex;align-items:center;gap:10px;font-size:1.1rem;margin:8px 0 4px;color:#fff}.zemlja h2 span{min-width:0;overflow-wrap:anywhere}.country-flag.footer-flag{width:20px;height:15px;margin-right:4px}.zemlja p{font-size:.85rem;color:var(--text-muted)}
 a.zemlja:hover{border-color:var(--neon-cyan)}.zemlja.uskoro{opacity:.5}
 .linkovi{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:22px 0 40px}
 .linkovi a{display:block;background:var(--bg-card);border:1px solid var(--border-dim);border-radius:12px;padding:18px}
@@ -225,17 +225,17 @@ a.zemlja:hover{border-color:var(--neon-cyan)}.zemlja.uskoro{opacity:.5}
 <header class="hero"><div class="wrap"><span class="eyebrow">REGION</span><h1>Radni sati, fond sati i neradni dani</h1>
 <p class="lead">Izaberi zemlju. Svaka ima svoje praznike i pravila, pa i svoj fond sati.</p></div></header>
 <main class="wrap"><div class="zemlje" id="zemlje">
-<a class="zemlja" href="/rs/"><div class="zz">🇷🇸</div><h2>Srbija</h2><p>Fond sati, kalendar praznika, evidencija rada, planer odmora i kalkulator</p></a>
-<a class="zemlja" href="https://radni-sati.hr/"><div class="zz">🇭🇷</div><h2>Hrvatska</h2><p>radni-sati.hr: fond sati, blagdani, evidencija rada</p></a>
-<a class="zemlja" href="/ba/"><div class="zz">🇧🇦</div><h2>Bosna i Hercegovina</h2><p>FBiH, Republika Srpska i Brčko distrikt · fond sati, praznici i alati</p></a>
-<a class="zemlja" href="/me/"><div class="zz">🇲🇪</div><h2>Crna Gora</h2><p>Fond sati, kalendar praznika, evidencija rada, planer odmora i kalkulator</p></a>
-<a class="zemlja" href="/mk/"><div class="zz">🇲🇰</div><h2>Северна Македонија</h2><p>Фонд на часови, празници, калкулатор, евиденција и годишен одмор</p></a>
-<a class="zemlja" href="/si/"><div class="zz">🇸🇮</div><h2>Slovenija</h2><p>Fond ur, prazniki, kalkulator, evidenca in načrtovalnik dopusta</p></a>
-<a class="zemlja" href="/xk/"><div class="zz">🇽🇰</div><h2>Kosovo · Kosovë</h2><p>Fondi i orëve, festat, llogaritësi, evidenca dhe planifikuesi i pushimit</p></a>
+<a class="zemlja" href="/rs/"><h2><img class="country-flag" src="/assets/flags/rs.svg" data-country="RS" width="32" height="24" alt=""><span>Srbija</span></h2><p>Fond sati, kalendar praznika, evidencija rada, planer odmora i kalkulator</p></a>
+<a class="zemlja" href="https://radni-sati.hr/"><h2><img class="country-flag" src="/assets/flags/hr.svg" data-country="HR" width="32" height="24" alt=""><span>Hrvatska</span></h2><p>radni-sati.hr: fond sati, blagdani, evidencija rada</p></a>
+<a class="zemlja" href="/ba/"><h2><img class="country-flag" src="/assets/flags/ba.svg" data-country="BA" width="32" height="24" alt=""><span>Bosna i Hercegovina</span></h2><p>FBiH, Republika Srpska i Brčko distrikt · fond sati, praznici i alati</p></a>
+<a class="zemlja" href="/me/"><h2><img class="country-flag" src="/assets/flags/me.svg" data-country="ME" width="32" height="24" alt=""><span>Crna Gora</span></h2><p>Fond sati, kalendar praznika, evidencija rada, planer odmora i kalkulator</p></a>
+<a class="zemlja" href="/mk/"><h2><img class="country-flag" src="/assets/flags/mk.svg" data-country="MK" width="32" height="24" alt=""><span>Северна Македонија</span></h2><p>Фонд на часови, празници, калкулатор, евиденција и годишен одмор</p></a>
+<a class="zemlja" href="/si/"><h2><img class="country-flag" src="/assets/flags/si.svg" data-country="SI" width="32" height="24" alt=""><span>Slovenija</span></h2><p>Fond ur, prazniki, kalkulator, evidenca in načrtovalnik dopusta</p></a>
+<a class="zemlja" href="/xk/"><h2><img class="country-flag" src="/assets/flags/xk.svg" data-country="XK" width="32" height="24" alt=""><span>Kosovo · Kosovë</span></h2><p>Fondi i orëve, festat, llogaritësi, evidenca dhe planifikuesi i pushimit</p></a>
 </div></main>
 <footer>
   <div class="wrap">Radni sati · fond sati i neradni dani u regionu — <a href="/" style="color:var(--neon-cyan)">radni-sati.com</a></div>
-  <div style="text-align:center;margin-top:10px">🇭🇷 Za Hrvatsku: <a href="https://radni-sati.hr/" style="color:var(--neon-cyan)">radni-sati.hr</a> · Izradio <a href="https://retroapplab.com/" target="_blank" rel="noopener" style="color:var(--neon-cyan)">RetroAppLab</a></div>
+  <div style="text-align:center;margin-top:10px"><img class="country-flag footer-flag" src="/assets/flags/hr.svg" width="20" height="15" alt=""> Za Hrvatsku: <a href="https://radni-sati.hr/" style="color:var(--neon-cyan)">radni-sati.hr</a> · Izradio <a href="https://retroapplab.com/" target="_blank" rel="noopener" style="color:var(--neon-cyan)">RetroAppLab</a></div>
   <div style="text-align:center;margin-top:8px;font-size:.8rem"><a href="/o-nama/" style="color:var(--neon-cyan)">O nama</a> · <a href="/kontakt/" style="color:var(--neon-cyan)">Kontakt</a> · <a href="/politika-privatnosti/" style="color:var(--neon-cyan)">Politika privatnosti</a></div>
 </footer>
 <script>(function(){var b=document.querySelector(".rs-burger"),m=document.getElementById("rs-menu");if(!b||!m)return;b.onclick=function(){var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o);b.textContent=o?"✕":"☰"};})();</script>
