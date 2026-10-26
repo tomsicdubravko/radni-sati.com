@@ -69,12 +69,13 @@ function draw(){
     tr.innerHTML='<td><input type="date" value="'+esc(r.d||"")+'" data-k="d" aria-label="Datum"><small class="holiday-label"></small></td><td><input type="time" value="'+esc(r.od||"")+'" data-k="od" aria-label="Početak rada"></td><td><input type="time" value="'+esc(r.do||"")+'" data-k="do" aria-label="Završetak rada"></td><td><input type="number" min="0" max="1439" step="1" aria-label="Pauza u minutima" value="'+esc(r.pauza||0)+'" data-k="pauza"></td><td class="num" data-c="u"></td><td class="num" data-c="p"></td><td class="num" data-c="n"></td><td class="num" data-c="ne"></td><td class="num" data-c="b"></td><td><button class="btn ghost" aria-label="Ukloni smenu" style="padding:4px 10px">✕</button></td>';
     if(region==="mk"||region==="si"||region==="xk")tr.innerHTML=mkText(tr.innerHTML);
     if(limitedHolidays)tr.querySelector('[data-k="d"]').setAttribute("aria-describedby","holiday-coverage");
-    tr.querySelectorAll("input").forEach(function(inp){inp.addEventListener("input",function(){r[inp.dataset.k]=inp.value;sv();upd()})});
+    tr.querySelectorAll("input").forEach(function(inp){inp.addEventListener("input",function(){r[inp.dataset.k]=inp.value;delete r.auto;sv();upd()})});
     tr.querySelector("button").onclick=function(){R.splice(i,1);sv();draw()};
     tb.appendChild(tr)});
   upd();
 }
 function upd(){
+  salaryRate();
   var T={u:0,p:0,n:0,ne:0,b:0},overlap=0,unknown=false,rows=document.querySelectorAll("#rows tr");
   R.forEach(function(r,i){var c=calc(r),tr=rows[i];["u","p","n","ne","b"].forEach(function(k){T[k]+=c[k];tr.querySelector('[data-c="'+k+'"]').textContent=f(c[k])});
     unknown=unknown||c.holidayUnknown;
@@ -86,9 +87,11 @@ function upd(){
     pi.setCustomValidity(!Number.isInteger(v)||v<0||v>=duration?mkText("Pauza mora biti kraća od smene i izražena u celim minutima."):"")});
   ["u","p","n","ne","b"].forEach(function(k,j){document.getElementById(["tU","tP","tN","tNe","tB"][j]).textContent=f(T[k])});
   if(unknown)document.getElementById("tB").textContent="?";
+  totalIds.forEach(function(id){mobile.querySelector('[data-total="'+id+'"]').textContent=document.getElementById(id).textContent});
   if(limitedHolidays)document.getElementById("holiday-coverage-status").textContent=unknown?coverageText.unknown:"";
   var s=parseFloat(String(document.getElementById("sat").value).replace(",","."))||0,box=document.getElementById("novac");
   box.style.display=unknown?"none":"";
+  rateHint.hidden=unknown||s>0||sat.disabled;
   if(!unknown&&s>0&&T.u>0){var pc=function(id){return (+document.getElementById(id).value||0)/100},osn=T.u*s,dod=s*(T.p*pc("pPr")+T.n*pc("pNo")+T.ne*pc("pNe")+T.b*pc("pBl"));
     if(region==="si"||region==="xk")dod-=s*overlap*Math.min(pc("pNe"),pc("pBl"));
     box.hidden=false;document.getElementById("eUk").textContent=eur(osn+dod);document.getElementById("eOsn").textContent=eur(osn);document.getElementById("eDod").textContent=eur(dod);document.getElementById("eSat").textContent=eur(s)}else box.hidden=true;
@@ -101,9 +104,53 @@ if(region==="ba"||region==="mk"||region==="si"||region==="xk"){
   var settingsKey=storagePrefix+"-kalk-postavke",settingIds=["dn","sat","pPr","pNo","pNe","pBl"];
   if(region==="si"){settingIds.push("siNight");document.getElementById("siNight").addEventListener("input",upd);}
   try{var savedSettings=JSON.parse(localStorage.getItem(settingsKey)||"{}");settingIds.forEach(function(id){if(savedSettings[id]!==undefined&&Number.isFinite(+savedSettings[id])&&+savedSettings[id]>=0)document.getElementById(id).value=savedSettings[id]});}catch(e){}
-  settingIds.forEach(function(id){document.getElementById(id).addEventListener("input",function(){var settings={};settingIds.forEach(function(k){settings[k]=document.getElementById(k).value});try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch(e){}})});
+  settingIds.forEach(function(id){document.getElementById(id).addEventListener("input",function(){var settings={};settingIds.forEach(function(k){settings[k]=k==="sat"&&salaryWasActive?manualRate:document.getElementById(k).value});try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch(e){}})});
 }
-if(!R.length)R.push({d:today(),od:"08:00",do:"16:00",pauza:region==="mk"||region==="si"||region==="xk"?30:0});
+
+// Calculator-only controls; all totals continue to come from upd().
+var moneyText={
+ rs:['ili mesečna bruto plata','din','Upišite satnicu iznad za izračun bruto iznosa.','Izračun je informativan; naknada za praznike i bolovanje može se u obračunu zarade računati drukčije.'],
+ me:['ili mjesečna bruto plata','EUR','Upišite satnicu iznad za izračun bruto iznosa.','Izračun je informativan; naknada za praznike i bolovanje može se u obračunu zarade računati drukčije.'],
+ ba:['ili mjesečna bruto plaća','KM','Upišite satnicu iznad za izračun bruto iznosa.','Izračun je informativan; naknada za praznike i bolovanje može se u obračunu zarade računati drukčije.'],
+ mk:['или месечна бруто плата','MKD','Внесете саатница погоре за пресметка на бруто износот.','Пресметката е информативна; надоместокот за празници и боледување може да се пресметува поинаку при пресметката на плата.'],
+ si:['ali mesečna bruto plača','EUR','Za izračun bruto zneska zgoraj vnesite urno postavko.','Izračun je informativen; nadomestilo za praznike in bolniško odsotnost se lahko pri obračunu plače izračuna drugače.'],
+ xk:['ose paga mujore bruto','EUR','Shkruani pagën për orë më sipër për llogaritjen e shumës bruto.','Llogaritja është informuese; kompensimi për festa dhe pushim mjekësor mund të llogaritet ndryshe në përllogaritjen e pagës.']
+}[region];
+var sat=document.getElementById('sat'),salaryLabel=document.createElement('label');
+salaryLabel.className='f';salaryLabel.textContent=moneyText[0]+' ('+moneyText[1]+')';
+var salary=document.createElement('input');salary.type='number';salary.id='salary';salary.min='0';salary.step='0.01';salary.setAttribute('aria-describedby','salary-help salary-note');salaryLabel.appendChild(salary);
+sat.parentElement.insertAdjacentElement('afterend',salaryLabel);
+var salaryHelp=document.createElement('p');salaryHelp.id='salary-help';salaryHelp.className='salary-help';salaryHelp.setAttribute('role','status');
+var salaryNote=document.createElement('p');salaryNote.id='salary-note';salaryNote.className='salary-help';salaryNote.textContent=moneyText[3];
+sat.closest('.panel').insertAdjacentElement('afterend',salaryNote);salaryNote.insertAdjacentElement('beforebegin',salaryHelp);
+var rateHint=document.createElement('button');rateHint.type='button';rateHint.id='rate-hint';rateHint.className='btn rate-hint';rateHint.textContent=moneyText[2];rateHint.onclick=function(){sat.focus()};document.getElementById('novac').insertAdjacentElement('beforebegin',rateHint);
+var mobile=document.createElement('dl');mobile.id='mobile-totals';mobile.className='mobile-totals';
+var totalIds=['tU','tP','tN','tNe','tB'];
+totalIds.forEach(function(id,j){var dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=document.getElementById('rows').closest('table').querySelectorAll('thead th')[j+4].textContent;dd.dataset.total=id;mobile.appendChild(dt);mobile.appendChild(dd)});
+document.getElementById('rows').closest('.scroll').insertAdjacentElement('afterend',mobile);
+var manualRate=sat.value,salaryWasActive=false;
+function salaryRate(){
+ var raw=salary.value,amount=Number(raw),dn=Number(document.getElementById('dn').value),month=document.getElementById('month').value;
+ var active=raw!==''||salary.validity.badInput;
+ if(!salaryWasActive&&active)manualRate=sat.value;
+ salaryHelp.textContent='';salary.setCustomValidity('');sat.disabled=active;
+ if(!active){if(salaryWasActive)sat.value=manualRate;salaryWasActive=false;return;}
+ salaryWasActive=true;sat.value='';
+ if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))return;
+ var y=+month.slice(0,4),m=+month.slice(5);
+ if(y<1900||y>2099)return;
+ if(!supportedYear(y)){salaryHelp.textContent=coverageText.range;return;}
+ if(!Number.isFinite(amount)||amount<=0||!Number.isFinite(dn)||dn<=0)return;
+ var weekdays=0;for(var d=1;d<=new Date(y,m,0).getDate();d++){var day=new Date(y,m-1,d).getDay();if(day>0&&day<6)weekdays++;}
+ var fund=weekdays*dn,rate=amount/fund;if(!Number.isFinite(fund)||fund<=0||!Number.isFinite(rate))return;
+ sat.value=String(rate);
+ salaryHelp.textContent=eur(amount)+' '+moneyText[1]+' / '+f(fund)+' h ('+month+') = '+eur(rate)+' '+moneyText[1]+'/h';
+}
+salary.addEventListener('input',upd);
+document.getElementById('month').addEventListener('input',upd);
+document.getElementById('month').addEventListener('change',upd);
+
+if(!R.length){R.push({auto:true,d:today(),od:"08:00",do:"16:00",pauza:region==="mk"||region==="si"||region==="xk"?30:0});sv();}
 initTemplate();
 draw();
 function initTemplate(){
@@ -127,9 +174,9 @@ function initTemplate(){
     if(!Number.isInteger(t.pauza)||t.pauza<0||t.pauza>=duration){pause.setCustomValidity(mkText("Pauza mora biti kraća od smene."));pause.reportValidity();return}
     var parts=month.value.split("-").map(Number),days=new Date(parts[0],parts[1],0).getDate(),dates=[];
     for(var d=1;d<=days;d++){var date=new Date(parts[0],parts[1]-1,d);if(t.days.indexOf(date.getDay())>=0)dates.push(kljuc(date))}
-    var conflicts=R.filter(function(r){return dates.indexOf(r.d)>=0&&(r.od||r.do||Number(r.pauza))});
+    var conflicts=R.filter(function(r){return r.auto!==true&&dates.indexOf(r.d)>=0&&(r.od||r.do||Number(r.pauza))});
     if(conflicts.length&&!confirm(mkText("Na izabranim datumima postoje unosi (")+conflicts.length+mkText("). Zameniti ih predloškom? Ostali datumi ostaju sačuvani."))){status.textContent=mkText("Popunjavanje je otkazano. Unosi su sačuvani.");return}
-    R=R.filter(function(r){return dates.indexOf(r.d)<0&&(r.d||r.od||r.do||Number(r.pauza))});
+    R=R.filter(function(r){return r.auto!==true&&dates.indexOf(r.d)<0&&(r.d||r.od||r.do||Number(r.pauza))});
     dates.forEach(function(d){R.push({d:d,od:t.od,do:t.do,pauza:t.pauza})});
     R.sort(function(a,b){return (a.d||"").localeCompare(b.d||"")});
     sv();draw();try{localStorage.setItem(templateKey,JSON.stringify(t))}catch(e){}

@@ -1,0 +1,15 @@
+/* Shared calculator additions K1–K4. */
+#novac[hidden],#rate-hint[hidden]{display:none!important}
+.salary-help{margin:8px 0 16px;color:var(--text-muted);font-size:.85rem;overflow-wrap:anywhere}
+.rate-hint{display:block;margin:20px 0;text-align:left;white-space:normal}
+.mobile-totals{display:none}
+@media(max-width:640px){
+ main.wrap .grid{grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr))}
+ main.wrap .grid>*{min-width:0}
+ main.wrap .scroll{max-width:100%}
+ #template .template-days{min-width:0}
+ .mobile-totals{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;padding:16px;margin:12px 0;border:1px solid var(--border-dim);border-radius:10px;background:var(--bg-card)}
+ .mobile-totals dt,.mobile-totals dd{min-width:0;overflow-wrap:anywhere}
+ .mobile-totals dt{color:var(--text-muted)}
+ .mobile-totals dd{margin:0;text-align:right;font-weight:700;color:var(--neon-gold);font-variant-numeric:tabular-nums}
+}
