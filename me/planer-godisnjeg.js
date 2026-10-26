@@ -80,60 +80,26 @@
   function slobodan(d, G) { return vik(d) || !!hol(d) || !!G[iso(d)]; }
 
   function blokovi() {
-    var G = goSkup(), res = [], viđeno = {};
-    S.go.slice().sort().forEach(function (k) {
-      var d = odIso(k), a = d, b = d;
-      while (slobodan(add(a, -1), G)) a = add(a, -1);
-      while (slobodan(add(b, 1), G)) b = add(b, 1);
-      if (viđeno[iso(a)]) return; viđeno[iso(a)] = 1;
-      var n = 0; for (var x = a; x <= b; x = add(x, 1)) if (G[iso(x)]) n++;
-      res.push({ a: a, b: b, len: Math.round((b - a) / 864e5) + 1, go: n });
+    var days = GOOptimizer.calendar({year:Y, week:S.sedmica, holidays:praznici(Y), existing:S.go});
+    return GOOptimizer.periods(days, S.go).map(function (block) {
+      return {a:odIso(block.from), b:odIso(block.to), len:block.free, go:block.leave};
     });
-    return res;
   }
 
-  /* ---------- prijedlog rasporeda ---------- */
+  /* G1: preview only; persistence happens exclusively in the Apply callback. */
   function predlozi() {
-    var budzet = S.dani, G = {}, H = praznici(Y), kandidati = [], vid = {};
-    Object.keys(H).sort().forEach(function (k) {
-      var d = odIso(k); if (vik(d)) return;
-      var a = d, b = d;
-      while (slobodan(add(a, -1), {})) a = add(a, -1);
-      while (slobodan(add(b, 1), {})) b = add(b, 1);
-      [-1, 1].forEach(function (smjer) {
-        var g = 0, uzmi = [], z = add(smjer < 0 ? a : b, smjer);
-        while (!slobodan(z, {}) && g < 5) { g++; uzmi.push(iso(z)); z = add(z, smjer); }
-        if (g === 0 || g > 4 || uzmi.some(function (k2) { return k2.slice(0, 4) !== String(Y); })) return;
-        var e = z; while (slobodan(add(e, smjer), {})) e = add(e, smjer);
-        var ukupno = Math.round(((smjer < 0 ? b : e) - (smjer < 0 ? e : a)) / 864e5) + 1;
-        var kljucK = uzmi.slice().sort().join(',');
-        if (vid[kljucK]) return; vid[kljucK] = 1;
-        kandidati.push({ g: g, uzmi: uzmi, odnos: ukupno / g });
-      });
+    var snapshot = JSON.stringify({year:Y, state:S});
+    GOPlanner.preview({
+      region:"me", year:Y, total:S.dani, week:S.sedmica, existing:S.go.slice(),
+      holidays:praznici(Y), supported:Y >= 1900 && Y <= 2099,
+      preliminary:false, storageKey:"me" + '-planer-' + Y,
+      formatPeriod:function (from, to) { return raspon(odIso(from), odIso(to), Y); },
+      isCurrent:function () { return snapshot === JSON.stringify({year:Y, state:S}); },
+      apply:function (added, replace) {
+        S.go = (replace ? added : S.go.concat(added)).sort();
+        sačuvaj();crtaj();
+      }
     });
-    kandidati.sort(function (p, q) { return q.odnos - p.odnos || p.g - q.g; });
-    kandidati.forEach(function (c) {
-      if (c.odnos < 2.5 || c.g > budzet) return;
-      if (c.uzmi.some(function (k) { return G[k]; })) return;
-      c.uzmi.forEach(function (k) { G[k] = 1; }); budzet -= c.g;
-    });
-    // ljetnji odmor: sedmica u julu/avgustu s najmanje potrebnih dana
-    var najbolji = null;
-    for (var d = new Date(Y, 6, 1); d <= new Date(Y, 7, 24); d = add(d, 1)) {
-      if (d.getDay() !== 1) continue;
-      var dani = []; for (var i = 0; i < (S.sedmica === 6 ? 6 : 5); i++) { var x = add(d, i); if (!vik(x) && !hol(x) && !G[iso(x)]) dani.push(iso(x)); }
-      if (dani.length >= 3 && dani.length <= budzet && (!najbolji || dani.length < najbolji.length)) najbolji = dani;
-    }
-    var zadnji = null;
-    if (najbolji) { najbolji.forEach(function (k) { G[k] = 1; }); budzet -= najbolji.length; zadnji = odIso(najbolji[najbolji.length - 1]); }
-    // ostatak: nastavi ljetnji odmor (ili dodaj na kraj zadnjeg bloka)
-    if (!zadnji) { var sv = Object.keys(G).sort(); zadnji = sv.length ? odIso(sv[sv.length - 1]) : new Date(Y, 6, 1); }
-    var z2 = add(zadnji, 1), sigurnost = 0;
-    while (budzet > 0 && sigurnost++ < 400 && z2.getFullYear() === Y) {
-      if (!vik(z2) && !hol(z2) && !G[iso(z2)]) { G[iso(z2)] = 1; budzet--; }
-      z2 = add(z2, 1);
-    }
-    S.go = Object.keys(G).sort(); sačuvaj(); crtaj();
   }
 
   /* ---------- crtanje ---------- */
@@ -212,7 +178,6 @@
       S.dani = novi; sačuvaj(); crtaj();
     };
     host.querySelector('#pl-predlozi').onclick = function () {
-      if (S.go.length && !confirm('Zamijeniti postojeći plan prijedlogom?')) return;
       predlozi();
     };
     host.querySelector('#pl-ocisti').onclick = function () {

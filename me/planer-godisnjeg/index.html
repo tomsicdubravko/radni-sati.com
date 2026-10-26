@@ -263,7 +263,7 @@ header.hero{padding:40px 0 20px}.hero h1{font-size:clamp(1.8rem,4vw,2.8rem)}.her
     <h3>Troše li vikendi i praznici dane godišnjeg odmora?</h3>
     <p>Za petodnevnu radnu sedmicu subote i nedjelje ne troše godišnji. Za šestodnevnu radnu sedmicu subota je radni dan i troši godišnji ako je označite. Nedjelje i praznici ne troše godišnji, pa planer dozvoljava označavanje samo radnih dana. Zato praznik uz vikend ili usred sedmice može donijeti puno više slobodnih dana od broja iskorišćenih dana godišnjeg.</p>
     <h3>Kako planer predlaže raspored?</h3>
-    <p>Prvo spaja praznike s vikendima tamo gdje se jednim ili dva dana godišnjeg dobija najviše slobodnih dana, a ostatak rasporedi na ljetnji odmor. Prijedlog možete slobodno mijenjati klikom na dane.</p>
+    <p>Planer poredi kombinacije praznika, vikenda i godišnjeg tokom cijele godine. Prednost imaju korisni mostovi uz manju potrošnju dana; postojeći plan ostaje sačuvan. Prijedlog prvo pregledate, a tek zatim primjenjujete. Preostali dani se ne troše automatski na ljetnji odmor.</p>
     <h3>Mogu li plan predati poslodavcu?</h3>
     <p>Da. Dugme „Štampaj / PDF“ izrađuje plan s periodima odmora i mjestom za potpis zaposlenog i poslodavca, a „Excel“ izvozi popis dana za daljnju obradu.</p>
     <h3>Gdje vidim sve produžene vikende?</h3>
@@ -340,6 +340,9 @@ function mostoviHTML(y){
 
 (function(){var q=new URLSearchParams(location.search),y=Number(q.get("g"))||new Date().getFullYear();if(y<2000||y>2100)y=new Date().getFullYear();window.RS_Y=y;function oznaci(){document.querySelectorAll("#pl-godine a").forEach(function(a){var on=+a.dataset.g===window.RS_Y;a.classList.toggle("on",on);if(on)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")})}oznaci();document.querySelectorAll("#pl-godine a").forEach(function(a){a.onclick=function(e){e.preventDefault();window.RS_Y=+a.dataset.g;history.replaceState(null,"","?g="+a.dataset.g);oznaci();rsPlaner(window.RS_Y)}});})();
 </script>
+<link rel="stylesheet" href="/assets/planer-prijedlog.css">
+<script src="/assets/planer-optimizer.js"></script>
+<script src="/assets/planer-prijedlog.js"></script>
 <script src="/me/planer-godisnjeg.js"></script>
 <script>(function(){var b=document.querySelector(".rs-burger"),m=document.getElementById("rs-menu");if(!b||!m)return;b.onclick=function(){var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o);b.textContent=o?"✕":"☰";b.setAttribute("aria-label",o?"Zatvori meni":"Otvori meni")};var y=new Date().getFullYear(),f=document.getElementById("me-fond");if(f&&y>=2026&&y<=2027)f.href="/me/fond-sati-"+y+"/";var p=location.pathname;m.querySelectorAll("a[data-sek]").forEach(function(a){var s=a.dataset.sek;if(s==="/me/"?(p==="/me/"||p==="/me/index.html"):p.indexOf(s)===0)a.setAttribute("aria-current","page")});})();</script>
 </body>

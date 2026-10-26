@@ -334,6 +334,7 @@
           <span id="brziUnosArrow" style="font-size:12px;color:#888;">▼</span>
         </div>
         <div id="brziUnosBody" style="display:none;padding:0 15px 15px 15px;">
+        <p style="font-size:13px;">Ovo je predložak. Vremena 07:00–15:00 nisu evidentirani rad dok ne kliknete „Primijeni raspored na cijeli mjesec”. Promjene zatim sačuvajte dugmetom „Sačuvaj”.</p>
         <div id="brziunosWrapper" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
             <table style="border-collapse:collapse;font-size:13px;min-width:420px;width:100%;">
                 <tr style="background:#2c3e50;color:white;">
@@ -394,6 +395,10 @@
                 </tr>
             </table>
         </div>
+        <label style="display:block;margin-top:12px;font-size:13px;">Pauza po smjeni (min)
+            <input type="number" id="rrPauza" min="0" max="1439" step="1" aria-describedby="rrPauzaHelp" style="width:100px;padding:6px;border:1px solid #ccc;border-radius:4px;">
+        </label>
+        <p id="rrPauzaHelp" style="font-size:12px;">FBiH: za obračun unesite stvarnu neplaćenu pauzu; 0 znači da nema odbitka. U Republici Srpskoj i Brčkom pauza se uračunava u sate. Pauza nije unaprijed zadana.</p>
         <button onclick="primijeniRaspored()" style="margin-top:12px;width:100%;padding:10px;background:#e67e22;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;font-size:14px;">
             ⚡ Primijeni raspored na cijeli mjesec
         </button>
@@ -439,6 +444,7 @@
     <!-- Rezime -->
     <div id="evSazatak" style="display:none;margin-top:15px;">
         <div class="sekcija-naslov">📊 Rezime mjeseca</div>
+        <p id="ev-hours-status" role="status" aria-live="polite" style="font-size:13px;color:#7d6608;" hidden></p>
         <!-- Dinamički rezime — prikazuje samo ono što ima vrijednost -->
         <div id="evSazatakGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
             <!-- Uvijek prikazano -->
@@ -645,19 +651,20 @@ function ucitajEvidenciju() {
                     ${genTimeOptions(pod.odlazak||'')}
                 </select>
             </td>
-            <td style="border:1px solid #ddd;padding:3px;"><input type="number" class="ev-input ev-pauza" data-dan="${kd}" aria-label="Pauza u minutima, dan ${kd}" min="0" max="1439" step="1" value="${/^[0-9]+$/.test(String(pod.pauza??''))?pod.pauza:''}" style="width:60px" onchange="evIzracunaj(${kd})"></td>
-            <td style="border:1px solid #ddd;padding:5px;text-align:center;" id="ev_red_${kd}">
+            <td style="border:1px solid #ddd;padding:3px;"><input type="number" class="ev-input ev-pauza" data-dan="${kd}" aria-label="Pauza u minutima, dan ${kd}" min="0" max="1439" step="1" value="${/^[0-9]+$/.test(String(pod.pauza??''))?pod.pauza:''}" style="width:60px" oninput="evIzracunaj(${kd})" onchange="evIzracunaj(${kd})"></td>
+            <td style="border:1px solid #ddd;padding:5px;text-align:center;">
                 <span class="ev-redovni-${kd}">${pod.redovni||''}</span>
+                <small id="ev_hours_status_${kd}" style="display:block;font-size:10px;color:#7d6608;"></small>
             </td>
             <td style="border:1px solid #ddd;padding:5px;text-align:center;">
                 <input type="number" class="ev-input ev-preko" data-dan="${kd}" value="${pod.preko||''}"
                     min="0" max="12" step="0.5"
-                    style="width:50px;border:1px solid #ccc;border-radius:4px;text-align:center;font-size:12px;" onchange="azurirajSazatak()">
+                    style="width:50px;border:1px solid #ccc;border-radius:4px;text-align:center;font-size:12px;" oninput="azurirajSazatak()" onchange="azurirajSazatak()">
             </td>
             <td style="border:1px solid #ddd;padding:5px;text-align:center;">
                 <input type="number" class="ev-input ev-nocni" data-dan="${kd}" value="${pod.nocni||''}"
                     min="0" max="12" step="0.5"
-                    style="width:50px;border:1px solid #ccc;border-radius:4px;text-align:center;font-size:12px;" onchange="azurirajSazatak()">
+                    style="width:50px;border:1px solid #ccc;border-radius:4px;text-align:center;font-size:12px;" oninput="azurirajSazatak()" onchange="azurirajSazatak()">
             </td>
             <td style="border:1px solid #ddd;padding:3px;background:${bgVrsta};">
                 <select class="ev-input ev-vrsta" data-dan="${kd}"
@@ -693,20 +700,49 @@ function daniUMjesecu(god, mj) {
     return rezultat;
 }
 
-function evIzracunaj(dan) {
+// E1: distinguish unentered work, incomplete entries and confirmed calculated hours.
+// The existing regional break calculator remains the only source of hour arithmetic.
+function evStanjeSati(dan) {
     let dolEl = document.querySelector(`.ev-dolazak[data-dan="${dan}"]`);
     let odlEl = document.querySelector(`.ev-odlazak[data-dan="${dan}"]`);
-    if (!dolEl || !odlEl) return;
-    let dol = dolEl.value, odl = odlEl.value;
-    const pauseEl = document.querySelector('.ev-pauza[data-dan="'+dan+'"]');
-    const pause = pauseEl ? pauseEl.value : '';
-    let duration = dol && odl ? ((Number(odl.slice(0,2))*60+Number(odl.slice(3)))-(Number(dol.slice(0,2))*60+Number(dol.slice(3)))+1440)%1440 : 1440;
-    const valid = pause==='' || (Number.isInteger(Number(pause))&&Number(pause)>=0&&Number(pause)<duration);
-    if(pauseEl)pauseEl.setCustomValidity(valid?'':'Pauza mora biti u cijelim minutima i kraća od smjene.');
-    const redovni = valid ? BAEvidenceBreak.hours({dolazak:dol,odlazak:odl,pauza:pause}) : '';
-    let span = document.querySelector(`.ev-redovni-${dan}`);
-    if (span) span.textContent = redovni;
-    azurirajSazatak();
+    const pauseEl = document.querySelector(`.ev-pauza[data-dan="${dan}"]`);
+    const vrsta = document.querySelector(`.ev-vrsta[data-dan="${dan}"]`)?.value;
+    const state = {dolazak:dolEl?.value||'', odlazak:odlEl?.value||'', pauza:pauseEl?.value??'', pending:false, reason:''};
+    if (['O','B','S','B2'].includes(vrsta)) { state.inactive=true;return state; }
+    if (!state.dolazak && !state.odlazak) {
+        if (parseFloat(document.querySelector(`.ev-redovni-${dan}`)?.textContent)>0) {
+            state.pending=true;state.reason='Stari sati bez potpune smjene — provjerite unos.';
+        }
+        return state;
+    }
+    if (!state.dolazak || !state.odlazak) { state.pending=true;state.reason='Smjena nije potpuna.';return state; }
+    const mins=t=>Number(t.slice(0,2))*60+Number(t.slice(3));
+    const duration=(mins(state.odlazak)-mins(state.dolazak)+1440)%1440;
+    if (!duration) { state.pending=true;state.invalidTime=true;state.reason='Početak i završetak smjene ne smiju biti jednaki.';return state; }
+    if (pauseEl?.validity.badInput || (state.pauza!=='' && (!Number.isInteger(Number(state.pauza)) || Number(state.pauza)<0 || Number(state.pauza)>=duration))) {
+        state.pending=true;state.invalidPause=true;state.reason='Pauza mora biti u cijelim minutima i kraća od smjene.';return state;
+    }
+    if (BA.area==='fbih' && state.pauza==='') {
+        state.pending=true;state.reason='Sati nisu potvrđeni: unesite neplaćenu pauzu (0 ako nema odbitka).';
+    }
+    return state;
+}
+
+function evOznaciStanjeSati(dan, state) {
+    const status=document.getElementById('ev_hours_status_'+dan);
+    if (status) status.textContent=state.pending?'? '+state.reason:'';
+    const pause=document.querySelector(`.ev-pauza[data-dan="${dan}"]`);
+    const end=document.querySelector(`.ev-odlazak[data-dan="${dan}"]`);
+    if(pause)pause.setCustomValidity(state.invalidPause?state.reason:'');
+    if(end)end.setCustomValidity(state.invalidTime?state.reason:'');
+}
+
+function evIzracunaj(dan, osvjezi=true) {
+    const state=evStanjeSati(dan);
+    const span=document.querySelector(`.ev-redovni-${dan}`);
+    if(span)span.textContent=state.pending||state.inactive?'':BAEvidenceBreak.hours(state);
+    evOznaciStanjeSati(dan,state);
+    if(osvjezi)azurirajSazatak();
 }
 
 function evPromjenaVrste(dan, sel) {
@@ -721,28 +757,22 @@ function evPromjenaVrste(dan, sel) {
         let span = document.querySelector(`.ev-redovni-${dan}`);
         if (span) span.textContent = '';
     }
-    azurirajSazatak();
+    evIzracunaj(dan);
 }
 
 function azurirajSazatak() {
-    let redovni = 0, preko = 0, nocni = 0, odmor = 0, bolo = 0;
-    document.querySelectorAll('.ev-redovni-0, [class^="ev-redovni-"]').forEach(s => {
-        redovni += parseFloat(s.textContent) || 0;
-    });
-    // Redovni
-    document.querySelectorAll('[class*="ev-redovni-"]').forEach(s => {
-        redovni += parseFloat(s.textContent) || 0;
+    let redovni = 0, preko = 0, nocni = 0, odmor = 0, bolo = 0, nepotpuno = 0;
+    document.querySelectorAll('.ev-vrsta').forEach(sel => {
+        const state=evStanjeSati(sel.dataset.dan);
+        evOznaciStanjeSati(sel.dataset.dan,state);
+        if(state.pending)nepotpuno++;
+        else if(!state.inactive)redovni+=parseFloat(document.querySelector(`.ev-redovni-${sel.dataset.dan}`)?.textContent)||0;
     });
     document.querySelectorAll('.ev-preko').forEach(i => preko += parseFloat(i.value) || 0);
     document.querySelectorAll('.ev-nocni').forEach(i => nocni += parseFloat(i.value) || 0);
     document.querySelectorAll('.ev-vrsta').forEach(s => {
         if (s.value === 'O') odmor++;
         if (s.value === 'B') bolo++;
-    });
-    // Redovni iz spaneva
-    redovni = 0;
-    document.querySelectorAll('span[class^="ev-redovni-"]').forEach(s => {
-        redovni += parseFloat(s.textContent) || 0;
     });
     // Broji nedjelje s radom
     let nedjelja = 0;
@@ -767,13 +797,17 @@ function azurirajSazatak() {
         const vrsEl = document.querySelector('.ev-vrsta[data-dan="' + String(d.dan) + '"]');
         if(dolEl && odlEl && dolEl.value && odlEl.value) {
             const vrs = vrsEl ? vrsEl.value : 'R';
-            if(vrs !== 'S' && vrs !== 'O' && vrs !== 'B') radnihDana++;
+            if(!['S','O','B','B2'].includes(vrs)) radnihDana++;
         }
     });
 
     // Ažuriraj vrijednosti
     document.getElementById('evUkRadnihDana').textContent = radnihDana;
-    document.getElementById('evUkRedovni').textContent = redovni.toFixed(1).replace('.0','') + 'h';
+    const poznatiSati=redovni.toFixed(1).replace('.0','')+'h';
+    document.getElementById('evUkRedovni').textContent = nepotpuno?(redovni>0?poznatiSati+' + ?':'?'):poznatiSati;
+    const statusSati=document.getElementById('ev-hours-status');
+    statusSati.hidden=!nepotpuno;
+    statusSati.textContent=nepotpuno?'Obračun nije potpun: '+nepotpuno+' unosa čeka provjeru. Potvrđeni redovni sati: '+poznatiSati+'. Provjerite označene smjene i pauze. U FBiH unesite stvarnu neplaćenu pauzu; 0 znači da nema odbitka. Stari nepotvrđeni sati ostaju u zapisu, ali nisu uključeni u potvrđeni zbir.':'';
     document.getElementById('evUkPreko').textContent   = preko.toFixed(1).replace('.0','') + 'h';
     document.getElementById('evUkNocni').textContent   = nocni.toFixed(1).replace('.0','') + 'h';
     document.getElementById('evUkOdmor').textContent   = odmor + (odmor === 1 ? ' dan' : ' dana');
@@ -798,7 +832,7 @@ function azurirajSazatak() {
 
 function provjeriUpozorenja(){ document.getElementById("evUpozorenja").style.display="none"; }
 
-function pokupiPodatke() {
+function pokupiPodatke(zaObracun=false) {
     let podaci = {};
     let dani = document.querySelectorAll('.ev-vrsta');
     dani.forEach(sel => {
@@ -814,6 +848,11 @@ function pokupiPodatke() {
             vrsta:    sel.value,
             napomena: document.querySelector(`.ev-napomena[data-dan="${dan}"]`)?.value || ''
         };
+        if(zaObracun){
+            const state=evStanjeSati(dan);
+            if(state.pending||state.inactive)podaci[dan].redovni='';
+            if(state.pending)podaci[dan].napomena=[podaci[dan].napomena,'? '+state.reason].filter(Boolean).join(' · ');
+        }
     });
     return podaci;
 }
@@ -833,14 +872,14 @@ function exportEvidencija() {
     if (!mojIme) { alert('Prvo unesi svoje ime!'); return; }
 
     let zaposleni = { ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto };
-    let podaci = pokupiPodatke();
+    let podaci = pokupiPodatke(true);
     let dani   = daniUMjesecu(god, mj);
 
     let wb = XLSX.utils.book_new();
     let rows = [
         [`EVIDENCIJA RADA — ${MJESECI[mj]} ${god}`],
         [`Zaposleni: ${zaposleni.ime}`, '', `JMBG: ${zaposleni.oib}`, '', `Radno mjesto: ${zaposleni.radnoMjesto}`],
-        [BAEvidenceBreak.note()],
+        [BAEvidenceBreak.note()+' '+document.getElementById('ev-hours-status').textContent],
         [],
         ['Dan', 'Datum', 'Dan u sedmici', 'Dolazak', 'Odlazak', 'Pauza (min; prazno = nepoznato)', 'Redovni sati', 'Prekovremeni', 'Noćni', 'Vrsta', 'Napomena']
     ];
@@ -901,6 +940,20 @@ function primijeniRaspored() {
         };
     });
 
+    const pauzaPredloska=document.getElementById('rrPauza');
+    pauzaPredloska.setCustomValidity('');
+    const radneSmjene=Object.values(raspored).filter(r=>r.aktivan&&r.dolazak&&r.odlazak&&!['O','B','S','B2'].includes(r.vrsta));
+    pauzaPredloska.required=BA.area==='fbih'&&radneSmjene.length>0;
+    if(!pauzaPredloska.checkValidity()){pauzaPredloska.reportValidity();return;}
+    if(pauzaPredloska.value!==''){
+        const minute=t=>Number(t.slice(0,2))*60+Number(t.slice(3));
+        const nevaljano=radneSmjene.some(r=>{
+            const trajanje=(minute(r.odlazak)-minute(r.dolazak)+1440)%1440;
+            return !trajanje||Number(pauzaPredloska.value)>=trajanje;
+        });
+        if(nevaljano){pauzaPredloska.setCustomValidity('Pauza mora biti kraća od svake aktivne smjene.');pauzaPredloska.reportValidity();return;}
+    }
+
     let mj  = parseInt(document.getElementById('evMjesec').value);
     let god = parseInt(document.getElementById('evGodina').value);
     let dani = daniUMjesecu(god, mj);
@@ -916,9 +969,10 @@ function primijeniRaspored() {
 
         if (!dolEl || !odlEl || !vrsEl) return;
 
-        if (r.aktivan && r.dolazak && r.odlazak) {
+        if (r.aktivan && r.dolazak && r.odlazak && !['O','B','S','B2'].includes(r.vrsta)) {
             dolEl.value = r.dolazak;
             odlEl.value = r.odlazak;
+            if(pauzaPredloska.value!=='')document.querySelector(`.ev-pauza[data-dan="${d.dan}"]`).value=pauzaPredloska.value;
         } else {
             dolEl.value = '';
             odlEl.value = '';
@@ -928,7 +982,7 @@ function primijeniRaspored() {
         vrsEl.closest('td').style.background = VRSTE_BOJA[r.vrsta] || 'white';
 
         // Izračunaj redovne sate
-        evIzracunaj(d.dan);
+        evIzracunaj(d.dan, false);
     });
 
     azurirajSazatak();
@@ -940,7 +994,7 @@ function ispisEvidencija() {
     if (!mojIme) { alert('Prvo unesi svoje ime!'); return; }
 
     let zaposleni = { ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto };
-    let podaci = pokupiPodatke();
+    let podaci = pokupiPodatke(true);
     let dani   = daniUMjesecu(god, mj);
 
     // Ukupni sati
@@ -997,6 +1051,7 @@ function ispisEvidencija() {
         </table>
 
         <p>${BAEvidenceBreak.note()}</p>
+        <p>${document.getElementById('ev-hours-status').textContent}</p>
         <!-- Tablica po danima -->
         <table style="width:100%;border-collapse:collapse;font-size:10px;">
             <tr style="background:#2c3e50;color:white;">
@@ -1048,6 +1103,7 @@ const evCurrentUser = decodeURIComponent(urlParams.get('user') || '');
 
 function initDanasnjiBrziUnos() {
     if(!document.getElementById('danasPauza')){const label=document.createElement('label');label.textContent='Pauza (min, bez zadane vrijednosti) ';const input=document.createElement('input');input.id='danasPauza';input.type='number';input.min='0';input.max='1439';input.step='1';label.append(input);document.getElementById('danasOdlazak').parentElement.append(label);}
+    document.getElementById('danasPauza').required=BA.area==='fbih';
     // Generiraj opcije za dolazak/odlazak
     const danasDol = document.getElementById('danasDolazak');
     const danasOdl = document.getElementById('danasOdlazak');
@@ -1076,9 +1132,10 @@ function spremiDanasnji() {
     const god = parseInt(document.getElementById('evGodina').value);
     const dol = document.getElementById('danasDolazak').value;
     const bp=document.getElementById('danasPauza');
-    if(!bp.checkValidity()){bp.reportValidity();return;}
     const odl = document.getElementById('danasOdlazak').value;
     const vrsta = document.getElementById('danasVrsta').value;
+    bp.required=BA.area==='fbih'&&!['O','B','S','B2'].includes(vrsta);
+    if(!bp.checkValidity()){bp.reportValidity();return;}
 
     if(!mojIme) { alert('Prvo unesi svoje ime!'); return; }
     if(!dol || !odl) { alert('Upiši dolazak i odlazak!'); return; }
@@ -1129,9 +1186,11 @@ function showDanasnjiBrziUnos() {
                 const dol = document.getElementById('danasDolazak');
                 const odl = document.getElementById('danasOdlazak');
                 const vrs = document.getElementById('danasVrsta');
+                const pause = document.getElementById('danasPauza');
                 if(dol && podaci[today].dolazak) dol.value = podaci[today].dolazak;
                 if(odl && podaci[today].odlazak) odl.value = podaci[today].odlazak;
                 if(vrs && podaci[today].vrsta) vrs.value = podaci[today].vrsta;
+                if(pause) pause.value = podaci[today].pauza ?? '';
             }
         }
     } else {

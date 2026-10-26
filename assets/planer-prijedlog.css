@@ -1,0 +1,13 @@
+.go-preview{width:min(720px,calc(100% - 28px));max-height:85vh;margin:auto;padding:22px;background:var(--bg-main,#070611);color:var(--text-light,#f8fafc);border:1px solid var(--neon-cyan,#00f2fe);border-radius:12px;overflow:auto;font:inherit}
+.go-preview::backdrop{background:rgba(0,0,0,.75)}
+.go-preview h2{font-size:1.15rem;margin:0 0 14px}
+.go-preview p{margin:12px 0;overflow-wrap:anywhere}
+.go-preview ul{list-style:none;padding:0;margin:16px 0}
+.go-preview li{padding:12px 0;border-bottom:1px solid var(--border-dim,rgba(255,255,255,.15));overflow-wrap:anywhere}
+.go-preview li strong,.go-preview li span{display:block}
+.go-preview li strong{color:var(--neon-gold,#f59e0b)}
+.go-preview .go-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.go-preview .go-replace{margin-top:18px;font:inherit;color:var(--text-muted,#94a3b8);text-align:left}
+.go-preview .go-status{color:var(--neon-gold,#f59e0b)}
+.go-preview button:disabled{opacity:.5;cursor:default}
+@media(max-width:640px){.go-preview{padding:16px}.go-preview .go-actions button{flex:1 1 150px}}
