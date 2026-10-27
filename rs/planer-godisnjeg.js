@@ -202,7 +202,7 @@
       '<h2>Perioda odmora</h2><table><thead><tr><th>Period</th><th>Slobodnih dana</th><th>Dana godišnjeg</th></tr></thead><tbody>' + (redovi || '<tr><td colspan="3">—</td></tr>') + '</tbody></table>' +
       '<h2>Dani godišnjeg po mesecima</h2><table><thead><tr><th>Mesec</th><th>Dani</th><th>Broj</th></tr></thead><tbody>' + (mj || '<tr><td colspan="3">—</td></tr>') + '</tbody></table>' +
       '<div class="potpisi"><div>Potpis zaposlenog</div><div>Odobrio (poslodavac)</div></div>' +
-      '<p class="izvor">Izrađeno na radni-sati.hr</p>';
+      '<p class="izvor">Izrađeno na radni-sati.com</p>';
     rsIspis('Plan godišnjeg odmora ' + Y, html);
   }
   function excel() {

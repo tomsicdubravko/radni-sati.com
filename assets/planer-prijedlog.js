@@ -16,6 +16,7 @@
       Object.keys(words).forEach(function (word) { s = s.split(word).join(words[word]); });
       return s;
     }
+    function pl(n, one, few, many) { var a = n % 10, b = n % 100; return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many; }
     function close() { dialog.close(); }
     dialog.addEventListener('close', function () {
       dialog.remove();
@@ -47,7 +48,7 @@
         result.periods.forEach(function (block) {
           var li = element('li', '', list);
           element('strong', options.formatPeriod(block.from, block.to), li);
-          element('span', block.free + ' slobodnih dana · ' + block.leave + ' dana godišnjeg (' + block.added + ' novih)', li);
+          element('span', block.free + ' ' + pl(block.free, 'slobodan dan', 'slobodna dana', 'slobodnih dana') + ' · ' + block.leave + ' ' + pl(block.leave, 'dan godišnjeg', 'dana godišnjeg', 'dana godišnjeg') + ' (' + block.added + ' ' + pl(block.added, 'novi', 'nova', 'novih') + ')', li);
         });
         var summary = element('p', 'Novi dani godišnjeg: ' + result.added.length + ' · Ukupno iskorišteno: ' + result.used +
           ' / ' + options.total + ' · Preostalo: ' + result.remaining + ' · Povezani slobodni dani: ' + result.free, dialog);

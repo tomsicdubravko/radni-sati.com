@@ -163,7 +163,7 @@
       '<tr class="uk"><td>Fond sati</td><td>' + hs(z.sFond) + '</td></tr></tbody></table>';
     if (z.blRadni.length) t += '<h2>Praznici na radni dan</h2><table><tbody>' + z.blRadni.map(function (x) { return '<tr><td>' + x + '</td><td>' + hs(DN) + ' ' + satRijec(DN) + '</td></tr>'; }).join('') + '</tbody></table>';
     if (z.blVikend.length) t += '<h2>Praznici na vikend</h2><p>' + z.blVikend.join('<br>') + '</p>';
-    t += '<p class="izvor">Izrađeno na radni-sati.hr</p>';
+    t += '<p class="izvor">Izrađeno na radni-sati.com</p>';
     rsIspis('Radni sati ' + nazivRazdoblja(z), t);
   }
   function excelRazdoblja() {
@@ -265,7 +265,7 @@
         var tag = i === 0 ? 'th' : 'td', uk = /^UKUPNO/i.test(r[0] || '');
         t += '<tr' + (uk ? ' class="uk"' : '') + '>' + r.map(function (c) { return '<' + tag + '>' + escH(c) + '</' + tag + '>'; }).join('') + '</tr>';
       });
-      t += '</table><p>Fond sati = dani od ponedjeljka do petka × 8 sati, uključujući blagdane. Radni sati = redovni sati prema kalendaru, bez praznika.</p><p class="izvor">Izrađeno na radni-sati.hr</p>';
+      t += '</table><p>Fond sati = dani od ponedjeljka do petka × 8 sati, uključujući blagdane. Radni sati = redovni sati prema kalendaru, bez praznika.</p><p class="izvor">Izrađeno na radni-sati.com</p>';
       rsIspis('Fond sati ' + GODINA, t);
     };
     alati.querySelector('.fk-t-xls').onclick = function () { rsCsv('fond-sati-' + GODINA + '.csv', [['Fond sati ' + GODINA + '.'], []].concat(redoviTablice())); };
