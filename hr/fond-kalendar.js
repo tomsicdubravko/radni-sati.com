@@ -96,7 +96,7 @@
 
   /* ---------- kalendar ---------- */
   var mjesec = 0, odabran = [], pozadina = null, ZADNJI = null;
-  var DN = 8; try { DN = +(localStorage.getItem('rs-dnevno') || 8) || 8; } catch (e) {}
+  var DN = 8; try { DN = +(localStorage.getItem('hr-dnevno') || 8) || 8; } catch (e) {}
 
   function datum(dan) { return new Date(GODINA, mjesec, dan); }
   function brojDana() { return new Date(GODINA, mjesec + 1, 0).getDate(); }
@@ -167,7 +167,7 @@
         function () { window.prompt('Kopiraj tekst:', txt); });
     };
     var sel = pozadina.querySelector('.fk-dn-sel');
-    if (sel) sel.onchange = function () { DN = +sel.value; try { localStorage.setItem('rs-dnevno', String(DN)); } catch (e) {} crtaj(); };
+    if (sel) sel.onchange = function () { DN = +sel.value; try { localStorage.setItem('hr-dnevno', String(DN)); } catch (e) {} crtaj(); };
     var pr = pozadina.querySelector('.fk-print'); if (pr) pr.onclick = ispisRazdoblja;
     var xl = pozadina.querySelector('.fk-xls'); if (xl) xl.onclick = excelRazdoblja;
   }

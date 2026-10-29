@@ -69,12 +69,12 @@
   /* ---------- stanje ---------- */
   var Y = null, S = { dani: 20, go: [], tjedan: 5 };
   function ucitaj(y) {
-    try { var s = JSON.parse(localStorage.getItem('rs-planer-' + y) || 'null'); if (s && Array.isArray(s.go)) { s.tjedan = s.tjedan === 6 ? 6 : 5; return s; } } catch (e) {}
-    var dani = 20; try { dani = +(localStorage.getItem('rs-planer-dani') || 20) || 20; } catch (e) {}
+    try { var s = JSON.parse(localStorage.getItem('hr-planer-' + y) || 'null'); if (s && Array.isArray(s.go)) { s.tjedan = s.tjedan === 6 ? 6 : 5; return s; } } catch (e) {}
+    var dani = 20; try { dani = +(localStorage.getItem('hr-planer-dani') || 20) || 20; } catch (e) {}
     return { dani: dani, go: [], tjedan: 5 };
   }
   function spremi() {
-    try { localStorage.setItem('rs-planer-' + Y, JSON.stringify(S)); localStorage.setItem('rs-planer-dani', String(S.dani)); } catch (e) {}
+    try { localStorage.setItem('hr-planer-' + Y, JSON.stringify(S)); localStorage.setItem('hr-planer-dani', String(S.dani)); } catch (e) {}
   }
   function goSkup() { var o = {}; S.go.forEach(function (k) { o[k] = 1; }); return o; }
   function slobodan(d, G) { return vik(d) || !!hol(d) || !!G[iso(d)]; }

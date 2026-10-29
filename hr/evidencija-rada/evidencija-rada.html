@@ -224,7 +224,7 @@
 <meta property="og:image:alt" content="Radni-sati.com – besplatni alati za radno vrijeme">
 <meta property="og:site_name" content="Radni-sati.com">
 <meta name="twitter:card" content="summary_large_image">
-</head>
+<link data-ga1-head rel="stylesheet" href="/assets/css/analytics-consent.css"><script data-ga1-head defer src="/assets/js/analytics-consent.js" data-page-title="Evidencija radnih sati — besplatna evidencija radnog vremena | Radni sati"></script></head>
 <body>
 <div style="background:#2c3e50; padding:10px 12px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:9999;">
   <a href="/hr/" style="color:#9fd8ff; font-size:14px; text-decoration:none;">← radni-sati.com</a>
@@ -579,7 +579,7 @@ const VRSTE_BOJA  = { R:'#d5f5e3', P:'#fdebd0', N:'#d6eaf8', O:'#fef9e7', B:'#f9
 
 function ucitajMojePodatke() {
     let podaci = {};
-    try { podaci = JSON.parse(localStorage.getItem('mojiPodaci') || '{}'); } catch(e) {}
+    try { podaci = JSON.parse(localStorage.getItem('hr-mojiPodaci') || '{}'); } catch(e) {}
     if (podaci.ime) {
         mojIme = podaci.ime;
         mojOib = podaci.oib || '';
@@ -608,7 +608,7 @@ function spremiMojePodatke() {
     mojIme = ime;
     mojOib = document.getElementById('mOib').value.trim();
     mojRadnoMjesto = document.getElementById('mRadnoMjesto').value.trim();
-    localStorage.setItem('mojiPodaci', JSON.stringify({ ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto }));
+    localStorage.setItem('hr-mojiPodaci', JSON.stringify({ ime: mojIme, oib: mojOib, radnoMjesto: mojRadnoMjesto }));
     prikaziIdentitet();
     ucitajEvidenciju();
 }
@@ -624,7 +624,7 @@ function promijeniMojePodatke() {
 function evKljuc(god, mj) {
     // Koristi ime kao ključ — stabilan između sessija, na ovom uređaju
     const imeKljuc = mojIme.replace(/[^a-zA-Z0-9]/g, '_');
-    return `ev_${imeKljuc}_${god}_${mj}`;
+    return `hr_ev_${imeKljuc}_${god}_${mj}`;
 }
 
 function ucitajEvidenciju() {
@@ -1718,7 +1718,7 @@ window.addEventListener('load', function() {
 });
 </script>
 <p class="rs-prijava" style="text-align:center;margin:28px auto 6px;padding:0 16px;font-size:.85rem;opacity:.85">Primijetili ste pogrešku ili imate ideju? <a href="/hr/kontakt/?tema=greska&amp;s=/evidencija-rada/evidencija-rada.html" style="color:#0369a1;font-weight:600">Prijavi pogrešku ili predloži poboljšanje →</a></p>
-<footer style="text-align:center;padding:18px 12px;font-size:12px;opacity:.85"><a href="/hr/kontakt/" style="color:inherit">Kontakt</a> · <a href="/hr/politika-privatnosti/" style="color:inherit">Pravila privatnosti</a> · <a href="/hr/" style="color:inherit">radni-sati.com</a></footer>
+<footer style="text-align:center;padding:18px 12px;font-size:12px;opacity:.85"><a href="/hr/kontakt/" style="color:inherit">Kontakt</a> · <a href="/hr/politika-privatnosti/" style="color:inherit">Pravila privatnosti</a> · <a href="/hr/" style="color:inherit">radni-sati.com</a><span data-ga1-footer class="rs-consent-settings"> · <a href="/hr/politika-privatnosti/#analytics" data-analytics-settings>Postavke privatnosti</a></span></footer>
 
 <!-- PRAZAN OBRAZAC EVIDENCIJE -->
 <div id="pobModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:16px;">

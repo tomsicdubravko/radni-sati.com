@@ -4,7 +4,9 @@
   var grid = document.getElementById('mjeseci');
   if (!grid) return;
   var MJG = ['siječnja','veljače','ožujka','travnja','svibnja','lipnja','srpnja','kolovoza','rujna','listopada','studenoga','prosinca'];
-  var KLJUC = 'rs-kal-filteri';
+  var KLJUC = 'hr-kal-filteri';
+  /* Jednokratno preuzimanje: stari ključ koristio je samo hrvatski kalendar; izvorni zapis se ne briše. */
+  try { if (localStorage.getItem(KLJUC) === null) { var stari = localStorage.getItem('rs-kal-filteri'); if (stari !== null) localStorage.setItem(KLJUC, stari); } } catch (e) {}
   var S = { bl: true, rk: false };
   try { var sp = JSON.parse(localStorage.getItem(KLJUC) || 'null'); if (sp) { S.bl = sp.bl !== false; S.rk = !!sp.rk; } } catch (e) {}
   function spremi() { try { localStorage.setItem(KLJUC, JSON.stringify(S)); } catch (e) {} }
